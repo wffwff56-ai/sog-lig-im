@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SogʻlomYo'l — Salomatlik yordamchisi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F5F7F4;
+    --surface: #FFFFFF;
+    --surface-2: #EEF2ED;
+    --ink: #15211E;
+    --ink-soft: #4B5952;
+    --teal: #0F5C56;
+    --teal-deep: #0A413D;
+    --sage: #7FA98D;
+    --gold: #B8863B;
+    --gold-soft: #F1E4CC;
+    --danger: #B5453B;
+    --line: #DDE4DD;
+    --radius: 14px;
+    --shadow: 0 2px 10px rgba(15,92,86,0.07);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  #app{
+    max-width:1100px;
+    margin:0 auto;
+    padding:0 0 60px;
+    min-height:100vh;
+  }
+  /* ---- Top bar ---- */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:22px 28px 18px;
+    border-bottom:1px solid var(--line);
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .brand-mark{
+    width:34px;height:34px;border-radius:9px;
+    background:linear-gradient(135deg,var(--teal),var(--sage));
+    display:flex;align-items:center;justify-content:center;
+    color:white;font-family:'Fraunces',serif;font-weight:700;font-size:17px;
+    flex-shrink:0;
+  }
+  .brand-name{font-size:19px;font-weight:600;font-family:'Fraunces',serif;}
+  .plan-pill{
+    font-size:12px;
+    padding:5px 12px;
+    border-radius:100px;
+    background:var(--surface-2);
+    color:var(--ink-soft);
+    font-weight:600;
+    border:1px solid var(--line);
+  }
+  .plan-pill.premium{
+    background:var(--gold-soft);
+    color:#7A5A22;
+    border-color:#E2CB9A;
+  }
+
+  /* ---- Nav ---- */
+  .tabs{
+    display:flex;
+    gap:4px;
+    padding:14px 24px 0;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{
+    border:none;
+    background:transparent;
+    padding:10px 16px;
+    font-family:'IBM Plex Sans',sans-serif;
+    font-size:14px;
+    font-weight:600;
+    color:var(--ink-soft);
+    cursor:pointer;
+    border-radius:10px 10px 0 0;
+    white-space:nowrap;
+    position:relative;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .tab:hover{color:var(--ink);}
+  .tab.active{color:var(--teal-deep);}
+  .tab.active::after{
+    content:"";
+    position:absolute;
+    left:12px;right:12px;bottom:-1px;
+    height:3px;
+    background:var(--teal);
+    border-radius:3px 3px 0 0;
+  }
+  .tab .lock{
+    font-size:11px;
+    background:var(--gold-soft);
+    color:#7A5A22;
+    padding:1px 6px;
+    border-radius:100px;
+    font-weight:700;
+  }
+
+  main{padding:26px 24px 0;}
+  .panel{display:none;}
+  .panel.active{display:block; animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);}}
+
+  .grid{display:grid; gap:18px;}
+  .grid.cols-3{grid-template-columns:repeat(3,1fr);}
+  .grid.cols-2{grid-template-columns:1.3fr 1fr;}
+  @media(max-width:780px){
+    .grid.cols-3{grid-template-columns:1fr;}
+    .grid.cols-2{grid-template-columns:1fr;}
+  }
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px;
+    box-shadow:var(--shadow);
+  }
+  .card h3{margin:0 0 4px; font-size:16px;}
+  .muted{color:var(--ink-soft); font-size:13px; line-height:1.5;}
+
+  /* ---- Dashboard rings ---- */
+  .rings-card{
+    background:linear-gradient(160deg,var(--teal-deep),var(--teal));
+    color:white;
+    border:none;
+  }
+  .rings-card .muted{color:rgba(255,255,255,0.75);}
+  .rings-wrap{display:flex; gap:22px; align-items:center; flex-wrap:wrap;}
+  .ring-stat{display:flex; flex-direction:column; gap:2px;}
+  .ring-stat .num{font-family:'Fraunces',serif; font-size:28px; font-weight:600;}
+  .ring-stat .lab{font-size:12px; color:rgba(255,255,255,0.7); text-transform:uppercase; letter-spacing:.04em;}
+
+  svg.ring{overflow:visible;}
+
+  input, select, textarea{
+    font-family:'IBM Plex Sans',sans-serif;
+    font-size:14px;
+    padding:10px 12px;
+    border-radius:9px;
+    border:1px solid var(--line);
+    background:var(--surface);
+    color:var(--ink);
+    width:100%;
+  }
+  input:focus, select:focus, textarea:focus{
+    outline:2px solid var(--teal);
+    outline-offset:1px;
+    border-color:var(--teal);
+  }
+  label{font-size:12px; font-weight:600; color:var(--ink-soft); display:block; margin-bottom:5px;}
+  .field{margin-bottom:12px;}
+  .row{display:flex; gap:10px;}
+  .row > *{flex:1;}
+
+  button.btn{
+    font-family:'IBM Plex Sans',sans-serif;
+    font-weight:600;
+    font-size:14px;
+    padding:10px 16px;
+    border-radius:9px;
+    border:none;
+    cursor:pointer;
+    background:var(--teal);
+    color:white;
+    transition:transform .1s ease, background .15s ease;
+  }
+  button.btn:hover{background:var(--teal-deep);}
+  button.btn:active{transform:scale(0.97);}
+  button.btn.ghost{
+    background:transparent;
+    color:var(--teal-deep);
+    border:1px solid var(--line);
+  }
+  button.btn.ghost:hover{background:var(--surface-2);}
+  button.btn.gold{background:var(--gold); color:white;}
+  button.btn.gold:hover{background:#9C7130;}
+  button.btn.danger-ghost{background:transparent; color:var(--danger); border:1px solid #E7CFCC;}
+
+  .list-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 0;
+    border-bottom:1px solid var(--line);
+    gap:10px;
+  }
+  .list-item:last-child{border-bottom:none;}
+  .list-item .meta{font-size:12px; color:var(--ink-soft);}
+  .chip{
+    font-size:11px;
+    padding:3px 9px;
+    border-radius:100px;
+    background:var(--surface-2);
+    font-weight:600;
+    color:var(--ink-soft);
+  }
+  .chip.done{background:#DEEBE3; color:#286A4A;}
+
+  .empty{
+    text-align:center;
+    padding:30px 10px;
+    color:var(--ink-soft);
+    font-size:13px;
+  }
+
+  /* premium lock overlay */
+  .locked-panel{
+    position:relative;
+    border-radius:var(--radius);
+    overflow:hidden;
+  }
+  .locked-blur{
+    filter:blur(4px);
+    pointer-events:none;
+    user-select:none;
+    opacity:.6;
+  }
+  .lock-overlay{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:12px;
+    background:rgba(245,247,244,0.55);
+    text-align:center;
+    padding:20px;
+  }
+  .lock-badge{
+    width:46px;height:46px;border-radius:50%;
+    background:var(--gold-soft);
+    display:flex;align-items:center;justify-content:center;
+    font-size:20px;
+  }
+
+  /* bars chart */
+  .bars{display:flex; align-items:flex-end; gap:8px; height:120px; margin-top:14px;}
+  .bar-col{flex:1; display:flex; flex-direction:column; align-items:center; gap:6px;}
+  .bar{
+    width:100%;
+    background:linear-gradient(180deg,var(--sage),var(--teal));
+    border-radius:5px 5px 2px 2px;
+    min-height:3px;
+  }
+  .bar-day{font-size:10px; color:var(--ink-soft);}
+
+  /* Premium plans */
+  .plans{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:16px;}
+  @media(max-width:780px){.plans{grid-template-columns:1fr;}}
+  .plan-card{
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:18px;
+    background:var(--surface);
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .plan-card.featured{
+    border:2px solid var(--gold);
+    background:linear-gradient(180deg,var(--gold-soft) 0%, var(--surface) 55%);
+  }
+  .plan-price{font-family:'Fraunces',serif; font-size:26px; font-weight:600;}
+  .plan-price span{font-size:13px; font-weight:500; color:var(--ink-soft); font-family:'IBM Plex Sans',sans-serif;}
+
+  .disclaimer{
+    font-size:12px;
+    color:var(--ink-soft);
+    background:var(--surface-2);
+    border-left:3px solid var(--sage);
+    padding:10px 14px;
+    border-radius:6px;
+    margin-top:14px;
+    line-height:1.5;
+  }
+
+  .toast{
+    position:fixed;
+    bottom:20px; left:50%;
+    transform:translateX(-50%);
+    background:var(--teal-deep);
+    color:white;
+    padding:12px 20px;
+    border-radius:10px;
+    font-size:13px;
+    font-weight:600;
+    box-shadow:0 6px 20px rgba(0,0,0,0.2);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .25s ease, transform .25s ease;
+    z-index:50;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(-6px);}
+
+  .search-results{margin-top:10px; display:flex; flex-direction:column; gap:10px;}
+  .med-result{
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px;
+    background:var(--surface-2);
+  }
+  .med-result h4{margin:0 0 6px; font-family:'Fraunces',serif; font-size:16px;}
+  .med-result dl{margin:8px 0 0; display:grid; grid-template-columns:110px 1fr; gap:4px 10px; font-size:13px;}
+  .med-result dt{color:var(--ink-soft); font-weight:600;}
+  .med-result dd{margin:0;}
+
+  .clinic-card{
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px;
+    background:var(--surface-2);
+    display:flex; justify-content:space-between; align-items:flex-start; gap:12px;
+  }
+  .clinic-card + .clinic-card{margin-top:10px;}
+  .clinic-name{font-weight:600; font-size:14px;}
+  .clinic-phone{
+    display:inline-block;
+    margin-top:8px;
+    font-size:13px;
+    color:var(--teal-deep);
+    font-weight:600;
+    text-decoration:none;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-mark">S</div>
+      <div class="brand-name">SogʻlomYoʻl</div>
+    </div>
+    <div id="planPill" class="plan-pill">Bepul reja</div>
+  </div>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-tab="dashboard">Bosh sahifa</button>
+    <button class="tab" data-tab="meds">Dorilar</button>
+    <button class="tab" data-tab="calories">Kaloriya</button>
+    <button class="tab" data-tab="steps">Qadamlar</button>
+    <button class="tab" data-tab="clinics">Klinikalar <span class="lock">Premium</span></button>
+    <button class="tab" data-tab="druginfo">Dori maʼlumoti <span class="lock">Premium</span></button>
+    <button class="tab" data-tab="premium">Obuna</button>
+  </nav>
+
+  <main>
+    <!-- DASHBOARD -->
+    <section class="panel active" id="panel-dashboard">
+      <div class="grid cols-2" style="align-items:start;">
+        <div class="card rings-card">
+          <h3 style="color:white;">Bugungi holat</h3>
+          <p class="muted">Kunlik ko'rsatkichlaringiz shu yerda jamlanadi</p>
+          <div class="rings-wrap" style="margin-top:14px;">
+            <svg class="ring" width="96" height="96" viewBox="0 0 96 96">
+              <circle cx="48" cy="48" r="40" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="10"/>
+              <circle id="ringSteps" cx="48" cy="48" r="40" fill="none" stroke="#E8D9B5" stroke-width="10" stroke-linecap="round" stroke-dasharray="251" stroke-dashoffset="251" transform="rotate(-90 48 48)"/>
+            </svg>
+            <div class="ring-stat">
+              <div class="num" id="dashSteps">0</div>
+              <div class="lab">Qadam</div>
+            </div>
+            <div class="ring-stat">
+              <div class="num" id="dashKcal">0</div>
+              <div class="lab">Kaloriya</div>
+            </div>
+            <div class="ring-stat">
+              <div class="num" id="dashMeds">0/0</div>
+              <div class="lab">Dori qabul qilindi</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Bugungi dorilar</h3>
+          <p class="muted">Vaqtida ichishni unutmang</p>
+          <div id="dashMedsList" style="margin-top:8px;"></div>
+        </div>
+      </div>
+
+      <div class="grid cols-3" style="margin-top:18px;">
+        <div class="card">
+          <h3>Dori qoʻshish</h3>
+          <p class="muted">Tez orada eslatma sozlash</p>
+          <button class="btn ghost" style="margin-top:10px; width:100%;" onclick="goTab('meds')">O'tish →</button>
+        </div>
+        <div class="card">
+          <h3>Ovqat kiritish</h3>
+          <p class="muted">Kaloriyangizni kuzatib boring</p>
+          <button class="btn ghost" style="margin-top:10px; width:100%;" onclick="goTab('calories')">O'tish →</button>
+        </div>
+        <div class="card">
+          <h3>Qadam kiritish</h3>
+          <p class="muted">Bugungi yurgan qadamingiz</p>
+          <button class="btn ghost" style="margin-top:10px; width:100%;" onclick="goTab('steps')">O'tish →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- MEDS -->
+    <section class="panel" id="panel-meds">
+      <div class="grid cols-2" style="align-items:start;">
+        <div class="card">
+          <h3>Yangi dori qoʻshish</h3>
+          <div class="field">
+            <label>Dori nomi</label>
+            <input id="medName" placeholder="masalan: Paratsetamol">
+          </div>
+          <div class="row">
+            <div class="field">
+              <label>Qabul vaqti</label>
+              <input id="medTime" type="time" value="08:00">
+            </div>
+            <div class="field">
+              <label>Necha kunlik kurs (ixtiyoriy)</label>
+              <input id="medDays" type="number" placeholder="masalan: 7">
+            </div>
+          </div>
+          <button class="btn" onclick="addMed()">Qoʻshish</button>
+        </div>
+        <div class="card">
+          <h3>Mening dorilarim</h3>
+          <div id="medsList"></div>
+        </div>
+      </div>
+      <div class="disclaimer">Bu ilova faqat eslatma vositasi. Dozani oʻzgartirish yoki toʻxtatishdan oldin shifokoringiz bilan maslahatlashing.</div>
+    </section>
+
+    <!-- CALORIES -->
+    <section class="panel" id="panel-calories">
+      <div class="grid cols-2" style="align-items:start;">
+        <div class="card">
+          <h3>Ovqat qoʻshish</h3>
+          <div class="field">
+            <label>Mahsulot</label>
+            <select id="foodSelect"></select>
+          </div>
+          <div class="field">
+            <label>Miqdori (gramm yoki dona)</label>
+            <input id="foodQty" type="number" value="100">
+          </div>
+          <button class="btn" onclick="addFood()">Qoʻshish</button>
+          <div class="field" style="margin-top:16px;">
+            <label>Kunlik maqsad (kkal)</label>
+            <input id="calGoal" type="number" value="2000" onchange="saveGoal()">
+          </div>
+        </div>
+        <div class="card">
+          <h3>Bugungi ovqatlanish</h3>
+          <div id="foodLog"></div>
+          <div style="margin-top:12px; padding-top:12px; border-top:1px solid var(--line); display:flex; justify-content:space-between; font-weight:700;">
+            <span>Jami</span>
+            <span id="foodTotal">0 kkal</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEPS -->
+    <section class="panel" id="panel-steps">
+      <div class="grid cols-2" style="align-items:start;">
+        <div class="card">
+          <h3>Bugungi qadamni kiriting</h3>
+          <p class="muted">Telefoningiz hisoblagichidan yoki taxminan kiriting</p>
+          <div class="field" style="margin-top:10px;">
+            <label>Qadamlar soni</label>
+            <input id="stepsInput" type="number" placeholder="masalan: 6500">
+          </div>
+          <button class="btn" onclick="saveSteps()">Saqlash</button>
+          <div class="field" style="margin-top:16px;">
+            <label>Kunlik maqsad</label>
+            <input id="stepsGoal" type="number" value="8000" onchange="saveStepsGoal()">
+          </div>
+        </div>
+        <div class="card">
+          <h3>Oxirgi 7 kun</h3>
+          <div class="bars" id="stepsBars"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLINICS (premium) -->
+    <section class="panel" id="panel-clinics">
+      <div id="clinicsGate"></div>
+    </section>
+
+    <!-- DRUG INFO (premium) -->
+    <section class="panel" id="panel-druginfo">
+      <div id="druginfoGate"></div>
+    </section>
+
+    <!-- PREMIUM -->
+    <section class="panel" id="panel-premium">
+      <div class="card">
+        <h3>Premium obuna</h3>
+        <p class="muted">Klinikalarni topish va dori haqida batafsil maʼlumot — premium foydalanuvchilar uchun.</p>
+        <div class="plans">
+          <div class="plan-card">
+            <span class="chip">1 hafta</span>
+            <div class="plan-price">Bepul</div>
+            <p class="muted" style="flex:1;">Barcha premium funksiyalarni sinab ko'ring</p>
+            <button class="btn ghost" onclick="activatePlan('trial')">Sinovni boshlash</button>
+          </div>
+          <div class="plan-card featured">
+            <span class="chip done">Tavsiya etiladi</span>
+            <div class="plan-price">70,000 <span>so'm / oy</span></div>
+            <p class="muted" style="flex:1;">Oylik obuna, istalgan vaqt bekor qilish mumkin</p>
+            <button class="btn gold" onclick="activatePlan('monthly')">Tanlash</button>
+          </div>
+          <div class="plan-card">
+            <span class="chip">Yillik</span>
+            <div class="plan-price">300,000 <span>so'm / yil</span></div>
+            <p class="muted" style="flex:1;">2 oyga yaqin tejash bilan</p>
+            <button class="btn ghost" onclick="activatePlan('yearly')">Tanlash</button>
+          </div>
+        </div>
+        <p class="muted" style="margin-top:10px;">Haftalik reja: 20,000 so'm — <a href="#" onclick="activatePlan('weekly'); return false;" style="color:var(--teal-deep); font-weight:600;">shu tarifni tanlash</a></p>
+        <div class="disclaimer">Bu — demo prototip. Haqiqiy toʻlov (Payme/Click) ulanishi uchun backend server va yuridik shaxs (IP/MChJ) kerak bo'ladi. Hozircha tugmalar premium holatini faqat shu qurilmada faollashtiradi.</div>
+        <div id="subStatus" style="margin-top:14px;"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------------- Utilities ---------------- */
+const todayKey = () => new Date().toISOString().slice(0,10);
+const fmtDate = (d) => d.toISOString().slice(0,10);
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+async function storageGet(key, shared=false){
+  try{
+    const r = await window.storage.get(key, shared);
+    return r ? JSON.parse(r.value) : null;
+  }catch(e){ return null; }
+}
+async function storageSet(key, value, shared=false){
+  try{ await window.storage.set(key, JSON.stringify(value), shared); }
+  catch(e){ console.error('storage set failed', e); }
+}
+
+/* ---------------- Tabs ---------------- */
+const PREMIUM_TABS = ['clinics','druginfo'];
+function goTab(name){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active', p.id==='panel-'+name));
+  if(name==='clinics') renderClinicsPanel();
+  if(name==='druginfo') renderDrugInfoPanel();
+}
+document.getElementById('tabs').addEventListener('click', (e)=>{
+  const btn = e.target.closest('.tab');
+  if(!btn) return;
+  goTab(btn.dataset.tab);
+});
+
+/* ---------------- Subscription state ---------------- */
+let sub = { status:'free', plan:null, activatedAt:null };
+
+async function loadSub(){
+  const s = await storageGet('subscription');
+  if(s) sub = s;
+  updatePlanPill();
+}
+async function activatePlan(plan){
+  sub = { status: plan==='trial' ? 'trial' : 'premium', plan, activatedAt: new Date().toISOString() };
+  await storageSet('subscription', sub);
+  updatePlanPill();
+  showToast(plan==='trial' ? '7 kunlik bepul sinov faollashtirildi' : 'Premium faollashtirildi (demo)');
+  renderClinicsPanel();
+  renderDrugInfoPanel();
+  renderSubStatus();
+}
+function isPremium(){ return sub.status==='trial' || sub.status==='premium'; }
+function updatePlanPill(){
+  const pill = document.getElementById('planPill');
+  if(isPremium()){
+    pill.textContent = sub.status==='trial' ? 'Sinov rejimi' : 'Premium';
+    pill.classList.add('premium');
+  } else {
+    pill.textContent = 'Bepul reja';
+    pill.classList.remove('premium');
+  }
+  renderSubStatus();
+}
+function renderSubStatus(){
+  const el = document.getElementById('subStatus');
+  if(!el) return;
+  if(isPremium()){
+    el.innerHTML = `<div class="chip done">Faol: ${sub.plan==='trial'?'7 kunlik sinov':sub.plan==='weekly'?'Haftalik':sub.plan==='monthly'?'Oylik':'Yillik'} reja</div>`;
+  } else {
+    el.innerHTML = `<div class="chip">Hozircha bepul rejadasiz</div>`;
+  }
+}
+
+/* ---------------- MEDICATIONS ---------------- */
+let meds = [];
+async function loadMeds(){
+  meds = await storageGet('medications') || [];
+  renderMeds();
+}
+async function addMed(){
+  const name = document.getElementById('medName').value.trim();
+  const time = document.getElementById('medTime').value;
+  const days = document.getElementById('medDays').value;
+  if(!name){ showToast('Dori nomini kiriting'); return; }
+  meds.push({ id: Date.now().toString(), name, time, days: days || null });
+  await storageSet('medications', meds);
+  document.getElementById('medName').value='';
+  renderMeds();
+  showToast('Dori qoʻshildi');
+}
+async function removeMed(id){
+  meds = meds.filter(m=>m.id!==id);
+  await storageSet('medications', meds);
+  renderMeds();
+}
+async function toggleMedTaken(id){
+  const key = 'medlog:'+todayKey();
+  const log = await storageGet(key) || {};
+  log[id] = !log[id];
+  await storageSet(key, log);
+  renderMeds();
+}
+async function renderMeds(){
+  const key = 'medlog:'+todayKey();
+  const log = await storageGet(key) || {};
+  const wrap = document.getElementById('medsList');
+  const dashWrap = document.getElementById('dashMedsList');
+  if(meds.length===0){
+    wrap.innerHTML = '<div class="empty">Hali dori qoʻshilmagan</div>';
+    dashWrap.innerHTML = '<div class="empty">Dori qoʻshilmagan</div>';
+  } else {
+    const rowsFn = (editable) => meds.map(m=>`
+      <div class="list-item">
+        <div>
+          <div style="font-weight:600;">${escapeHtml(m.name)}</div>
+          <div class="meta">${m.time}${m.days?` • ${m.days} kunlik kurs`:''}</div>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <span class="chip ${log[m.id]?'done':''}" style="cursor:pointer;" onclick="toggleMedTaken('${m.id}')">${log[m.id]?'Ichildi ✓':'Belgilash'}</span>
+          ${editable?`<button class="btn danger-ghost" style="padding:5px 10px; font-size:12px;" onclick="removeMed('${m.id}')">O'chirish</button>`:''}
+        </div>
+      </div>`).join('');
+    wrap.innerHTML = rowsFn(true);
+    dashWrap.innerHTML = rowsFn(false);
+  }
+  const takenCount = meds.filter(m=>log[m.id]).length;
+  document.getElementById('dashMeds').textContent = `${takenCount}/${meds.length}`;
+}
+function escapeHtml(s){ return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* Reminder check every 30s */
+setInterval(async ()=>{
+  const now = new Date();
+  const hhmm = now.toTimeString().slice(0,5);
+  meds.forEach(m=>{
+    if(m.time===hhmm){
+      showToast(`⏰ Vaqt bo'ldi: ${m.name} ichish kerak`);
+    }
+  });
+}, 30000);
+
+/* ---------------- CALORIES ---------------- */
+const FOOD_DB = [
+  {name:'Osh (palov), 1 laganda', kcal:650},
+  {name:'Non, 1 dona', kcal:230},
+  {name:'Manti, 1 dona', kcal:110},
+  {name:'Somsa, 1 dona', kcal:250},
+  {name:'Lag'+String.fromCharCode(0x2019)+'mon, 1 laganda', kcal:480},
+  {name:'Shorva, 1 laganda', kcal:320},
+  {name:'Tovuq ko'+String.fromCharCode(0x2019)+'krak, 100g', kcal:165},
+  {name:'Mol go'+String.fromCharCode(0x2019)+'shti, 100g', kcal:250},
+  {name:'Guruch (pishirilgan), 100g', kcal:130},
+  {name:'Kartoshka (qovurilgan), 100g', kcal:310},
+  {name:'Olma, 1 dona', kcal:95},
+  {name:'Banan, 1 dona', kcal:105},
+  {name:'Tuxum, 1 dona', kcal:78},
+  {name:'Sut, 1 stakan', kcal:150},
+  {name:'Choy (shakarsiz), 1 stakan', kcal:2},
+  {name:'Salat (sabzavotli), 100g', kcal:60},
+];
+function initFoodSelect(){
+  const sel = document.getElementById('foodSelect');
+  sel.innerHTML = FOOD_DB.map((f,i)=>`<option value="${i}">${f.name} — ${f.kcal} kkal</option>`).join('');
+}
+let foodLogToday = [];
+async function loadFoodLog(){
+  foodLogToday = await storageGet('calories:'+todayKey()) || [];
+  const goal = await storageGet('calorieGoal');
+  if(goal) document.getElementById('calGoal').value = goal;
+  renderFoodLog();
+}
+async function addFood(){
+  const idx = document.getElementById('foodSelect').value;
+  const qty = parseFloat(document.getElementById('foodQty').value) || 1;
+  const base = FOOD_DB[idx];
+  const isPortion = base.name.includes('dona') || base.name.includes('laganda') || base.name.includes('stakan');
+  const kcal = isPortion ? Math.round(base.kcal * qty) : Math.round(base.kcal * (qty/100));
+  foodLogToday.push({ name: base.name, qty, kcal });
+  await storageSet('calories:'+todayKey(), foodLogToday);
+  renderFoodLog();
+  showToast('Ovqat qoʻshildi');
+}
+async function saveGoal(){
+  await storageSet('calorieGoal', parseFloat(document.getElementById('calGoal').value) || 2000);
+}
+function renderFoodLog(){
+  const wrap = document.getElementById('foodLog');
+  if(foodLogToday.length===0){
+    wrap.innerHTML = '<div class="empty">Bugun hali ovqat kiritilmagan</div>';
+  } else {
+    wrap.innerHTML = foodLogToday.map((f,i)=>`
+      <div class="list-item">
+        <div>
+          <div style="font-weight:600;">${escapeHtml(f.name)}</div>
+          <div class="meta">${f.qty} • ${f.kcal} kkal</div>
+        </div>
+      </div>`).join('');
+  }
+  const total = foodLogToday.reduce((s,f)=>s+f.kcal,0);
+  document.getElementById('foodTotal').textContent = total + ' kkal';
+  document.getElementById('dashKcal').textContent = total;
+}
+
+/* ---------------- STEPS ---------------- */
+async function saveSteps(){
+  const val = parseInt(document.getElementById('stepsInput').value) || 0;
+  await storageSet('steps:'+todayKey(), val);
+  showToast('Qadamlar saqlandi');
+  renderStepsDashboard();
+  renderStepsBars();
+}
+async function saveStepsGoal(){
+  await storageSet('stepsGoal', parseInt(document.getElementById('stepsGoal').value) || 8000);
+  renderStepsDashboard();
+}
+async function renderStepsDashboard(){
+  const today = await storageGet('steps:'+todayKey()) || 0;
+  const goal = await storageGet('stepsGoal') || 8000;
+  document.getElementById('dashSteps').textContent = today;
+  const pct = Math.min(1, today/goal);
+  const circumference = 251;
+  document.getElementById('ringSteps').setAttribute('stroke-dashoffset', circumference - (circumference*pct));
+  document.getElementById('stepsInput').value = today || '';
+  document.getElementById('stepsGoal').value = goal;
+}
+async function renderStepsBars(){
+  const wrap = document.getElementById('stepsBars');
+  const days = [];
+  for(let i=6;i>=0;i--){
+    const d = new Date();
+    d.setDate(d.getDate()-i);
+    days.push(d);
+  }
+  const values = [];
+  for(const d of days){
+    const v = await storageGet('steps:'+fmtDate(d)) || 0;
+    values.push(v);
+  }
+  const max = Math.max(...values, 1);
+  const dayNames = ['Ya','Du','Se','Ch','Pa','Ju','Sh'];
+  wrap.innerHTML = days.map((d,i)=>`
+    <div class="bar-col">
+      <div class="bar" style="height:${Math.max(3,(values[i]/max)*100)}px;" title="${values[i]} qadam"></div>
+      <div class="bar-day">${dayNames[d.getDay()]}</div>
+    </div>`).join('');
+}
+
+/* ---------------- CLINICS (premium, mock data) ---------------- */
+const CLINIC_DB = [
+  { name:'Toshkent Tez Tibbiy Yordam Markazi', specialties:['umumiy','yurak','shoshilinch'], phone:'+998 71 233 40 20', address:'Toshkent sh., Chilonzor tumani' },
+  { name:'Republika Ixtisoslashtirilgan Kardiologiya Markazi', specialties:['yurak','bosim'], phone:'+998 71 268 26 06', address:'Toshkent sh., Yunusobod tumani' },
+  { name:'"Konsilium Medikal" klinikasi', specialties:['umumiy','ichki kasalliklar','endokrinologiya'], phone:'+998 71 200 20 20', address:'Toshkent sh., Mirzo Ulug'+String.fromCharCode(0x2019)+'bek tumani' },
+  { name:'"OK Doctor" ko'+String.fromCharCode(0x2019)+'p tarmoqli klinikasi', specialties:['umumiy','bolalar','stomatologiya'], phone:'+998 78 150 03 03', address:'Toshkent sh., Shayxontohur tumani' },
+  { name:'"Neuromed" nevrologiya markazi', specialties:['bosh og'+String.fromCharCode(0x2019)+'rig'+String.fromCharCode(0x2019)+'i','nevrologiya','uyqu'], phone:'+998 71 205 05 05', address:'Toshkent sh., Mirobod tumani' },
+  { name:'"Ibn Sino" respublika klinik markazi', specialties:['umumiy','jarrohlik','ichki kasalliklar'], phone:'+998 71 150 11 11', address:'Toshkent sh., Yakkasaroy tumani' },
+];
+function findClinics(symptomText){
+  const q = symptomText.toLowerCase();
+  const scored = CLINIC_DB.map(c=>{
+    let score = 0;
+    c.specialties.forEach(s=>{ if(q.includes(s)) score += 2; });
+    return {c, score};
+  });
+  const matched = scored.filter(s=>s.score>0).map(s=>s.c);
+  return matched.length ? matched : CLINIC_DB.slice(0,3);
+}
+function renderClinicsPanel(){
+  const gate = document.getElementById('clinicsGate');
+  if(!isPremium()){
+    gate.innerHTML = lockedTemplate('Klinikalarni topish', 'Manzilingiz va sog'+String.fromCharCode(0x2019)+'liq muammoingizga mos klinikalarni va telefon raqamlarini ko'+String.fromCharCode(0x2019)+'rish uchun premium kerak.');
+    return;
+  }
+  gate.innerHTML = `
+    <div class="grid cols-2" style="align-items:start;">
+      <div class="card">
+        <h3>Klinika qidirish</h3>
+        <div class="field">
+          <label>Manzilingiz (tuman/shahar)</label>
+          <input id="clinicAddress" placeholder="masalan: Toshkent, Chilonzor">
+        </div>
+        <div class="field">
+          <label>Sog'liq muammosi</label>
+          <textarea id="clinicSymptom" rows="3" placeholder="masalan: yurak og'rig'i, bosh og'rig'i, bosim..."></textarea>
+        </div>
+        <button class="btn" onclick="searchClinics()">Qidirish</button>
+        <div class="disclaimer">Namuna: hozircha bu bo'lim sinov maʼlumotlar bazasidan foydalanadi. Haqiqiy joylashuv asosida qidirish uchun Google Places kabi xarita API integratsiyasi kerak bo'ladi.</div>
+      </div>
+      <div class="card">
+        <h3>Natijalar</h3>
+        <div id="clinicResults"><div class="empty">Qidiruv natijalari shu yerda chiqadi</div></div>
+      </div>
+    </div>
+  `;
+}
+function searchClinics(){
+  const symptom = document.getElementById('clinicSymptom').value || '';
+  const results = findClinics(symptom);
+  document.getElementById('clinicResults').innerHTML = results.map(c=>`
+    <div class="clinic-card">
+      <div>
+        <div class="clinic-name">${escapeHtml(c.name)}</div>
+        <div class="meta">${escapeHtml(c.address)}</div>
+        <a class="clinic-phone" href="tel:${c.phone.replace(/\\s/g,'')}">${c.phone}</a>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ---------------- DRUG INFO (premium, mock data) ---------------- */
+const DRUG_DB = {
+  'paratsetamol': { usage:'Bosh og'+String.fromCharCode(0x2019)+'rig'+String.fromCharCode(0x2019)+'i, tana harorati ko'+String.fromCharCode(0x2019)+'tarilishi, yengil-o'+String.fromCharCode(0x2019)+'rtacha og'+String.fromCharCode(0x2019)+'riqlar uchun.', when:'Ovqatdan keyin, kuniga 3-4 marta (shifokor ko'+String.fromCharCode(0x2019)+'rsatmasiga qarab).', conditions:'Shamollash, gripp, bosh og'+String.fromCharCode(0x2019)+'rig'+String.fromCharCode(0x2019)+'i, isitma.' },
+  'ibuprofen': { usage:'Yallig'+String.fromCharCode(0x2019)+'lanishga qarshi, og'+String.fromCharCode(0x2019)+'riq qoldiruvchi va isitma tushiruvchi.', when:'Ovqatdan keyin, kuniga 2-3 marta.', conditions:'Bosh og'+String.fromCharCode(0x2019)+'rig'+String.fromCharCode(0x2019)+'i, mushak og'+String.fromCharCode(0x2019)+'rig'+String.fromCharCode(0x2019)+'i, isitma, yallig'+String.fromCharCode(0x2019)+'lanish.' },
+  'amoksitsillin': { usage:'Antibiotik — bakterial infeksiyalarga qarshi.', when:'Shifokor belgilagan kurs davomida, teng oraliqlarda (odatda 8 soatda bir marta).', conditions:'Bakterial infeksiyalar (angina, bronxit va h.k.) — faqat shifokor tayinlashi bilan.' },
+  'omeprazol': { usage:'Oshqozon kislotasini kamaytiradi.', when:'Ovqatdan 30-60 daqiqa oldin, kuniga 1 marta.', conditions:'Gastrit, oshqozon yarasi, qizilo'+String.fromCharCode(0x2019)+'ngach reflyuksi.' },
+  'aspirin': { usage:'Og'+String.fromCharCode(0x2019)+'riq qoldiruvchi, qon suyultiruvchi (kichik dozada).', when:'Ovqatdan keyin, shifokor tavsiyasiga qarab.', conditions:'Bosh og'+String.fromCharCode(0x2019)+'rig'+String.fromCharCode(0x2019)+'i, yurak-qon tomir profilaktikasi.' },
+};
+function renderDrugInfoPanel(){
+  const gate = document.getElementById('druginfoGate');
+  if(!isPremium()){
+    gate.innerHTML = lockedTemplate('Dori maʼlumoti', 'Dori nomi va uning nima uchun, qachon, qanday kasalliklar uchun ichilishini bilish uchun premium kerak.');
+    return;
+  }
+  gate.innerHTML = `
+    <div class="card">
+      <h3>Dori haqida maʼlumot</h3>
+      <div class="field">
+        <label>Dori nomini kiriting</label>
+        <input id="drugQuery" placeholder="masalan: Paratsetamol">
+      </div>
+      <button class="btn" onclick="searchDrug()">Qidirish</button>
+      <div class="search-results" id="drugResults"></div>
+      <div class="disclaimer">Bu maʼlumot faqat umumiy maʼlumot uchun va tibbiy maslahat oʻrnini bosmaydi. Dori qabul qilishdan oldin shifokor yoki farmatsevt bilan maslahatlashing.</div>
+    </div>
+  `;
+}
+function searchDrug(){
+  const q = document.getElementById('drugQuery').value.trim().toLowerCase();
+  const wrap = document.getElementById('drugResults');
+  const found = DRUG_DB[q];
+  if(!found){
+    wrap.innerHTML = `<div class="empty">"${escapeHtml(q)}" topilmadi. Sinov bazasida: Paratsetamol, Ibuprofen, Amoksitsillin, Omeprazol, Aspirin.</div>`;
+    return;
+  }
+  wrap.innerHTML = `
+    <div class="med-result">
+      <h4>${escapeHtml(document.getElementById('drugQuery').value.trim())}</h4>
+      <dl>
+        <dt>Nima uchun</dt><dd>${found.usage}</dd>
+        <dt>Qachon ichish</dt><dd>${found.when}</dd>
+        <dt>Qanday holatlar uchun</dt><dd>${found.conditions}</dd>
+      </dl>
+    </div>
+  `;
+}
+
+function lockedTemplate(title, desc){
+  return `
+    <div class="locked-panel">
+      <div class="locked-blur card">
+        <h3>${title}</h3>
+        <div class="clinic-card"><div><div class="clinic-name">Namuna klinika</div><div class="meta">Manzil ko'rinadi</div></div></div>
+      </div>
+      <div class="lock-overlay">
+        <div class="lock-badge">🔒</div>
+        <h3 style="margin:0;">${title} — Premium</h3>
+        <p class="muted" style="max-width:320px;">${desc}</p>
+        <button class="btn gold" onclick="goTab('premium')">Premiumga o'tish</button>
+      </div>
+    </div>
+  `;
+}
+
+/* ---------------- Init ---------------- */
+async function init(){
+  initFoodSelect();
+  await loadSub();
+  await loadMeds();
+  await loadFoodLog();
+  await renderStepsDashboard();
+  await renderStepsBars();
+  renderMeds();
+}
+init();
+</script>
+</body>
+</html>
