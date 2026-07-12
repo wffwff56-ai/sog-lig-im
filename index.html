@@ -3,7 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SogʻlomYo'l — Salomatlik yordamchisi</title>
+<title>SogʻlomYoʻl — Dori eslatmasi, kaloriya va qadam hisoblagich</title>
+<meta name="description" content="SogʻlomYoʻl — dori ichish vaqtini eslatuvchi, kaloriya va kunlik qadamlarni hisoblovchi bepul ilova. Yaqin klinikalarni toping va dorilar haqida maʼlumot oling.">
+<meta name="keywords" content="dori eslatmasi, kaloriya hisoblagich, qadam hisoblagich, sogʻliqni saqlash ilovasi, klinika topish, dori haqida maʼlumot, salomatlik ilovasi Uzbekiston">
+<meta name="author" content="SogʻlomYoʻl">
+<meta property="og:title" content="SogʻlomYoʻl — Salomatlik yordamchisi">
+<meta property="og:description" content="Dori eslatmasi, kaloriya va qadam hisoblagich — bitta ilovada.">
+<meta property="og:type" content="website">
+<meta name="robots" content="index, follow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -62,7 +69,7 @@
     color:white;font-family:'Fraunces',serif;font-weight:700;font-size:17px;
     flex-shrink:0;
   }
-  .brand-name{font-size:19px;font-weight:600;font-family:'Fraunces',serif;}
+  .brand-name{font-size:19px;font-weight:600;font-family:'Fraunces',serif; margin:0;}
   .plan-pill{
     font-size:12px;
     padding:5px 12px;
@@ -351,7 +358,7 @@
   <div class="topbar">
     <div class="brand">
       <div class="brand-mark">S</div>
-      <div class="brand-name">SogʻlomYoʻl</div>
+      <h1 class="brand-name">SogʻlomYoʻl</h1>
     </div>
     <div id="planPill" class="plan-pill">Bepul reja</div>
   </div>
@@ -858,11 +865,41 @@ function searchClinics(){
 
 /* ---------------- DRUG INFO (premium, mock data) ---------------- */
 const DRUG_DB = {
-  'paratsetamol': { usage:'Bosh og'+String.fromCharCode(0x2019)+'rig'+String.fromCharCode(0x2019)+'i, tana harorati ko'+String.fromCharCode(0x2019)+'tarilishi, yengil-o'+String.fromCharCode(0x2019)+'rtacha og'+String.fromCharCode(0x2019)+'riqlar uchun.', when:'Ovqatdan keyin, kuniga 3-4 marta (shifokor ko'+String.fromCharCode(0x2019)+'rsatmasiga qarab).', conditions:'Shamollash, gripp, bosh og'+String.fromCharCode(0x2019)+'rig'+String.fromCharCode(0x2019)+'i, isitma.' },
-  'ibuprofen': { usage:'Yallig'+String.fromCharCode(0x2019)+'lanishga qarshi, og'+String.fromCharCode(0x2019)+'riq qoldiruvchi va isitma tushiruvchi.', when:'Ovqatdan keyin, kuniga 2-3 marta.', conditions:'Bosh og'+String.fromCharCode(0x2019)+'rig'+String.fromCharCode(0x2019)+'i, mushak og'+String.fromCharCode(0x2019)+'rig'+String.fromCharCode(0x2019)+'i, isitma, yallig'+String.fromCharCode(0x2019)+'lanish.' },
+  'paratsetamol': { usage:'Bosh ogʻrigʻi, tana harorati koʻtarilishi, yengil-oʻrtacha ogʻriqlar uchun.', when:'Ovqatdan keyin, kuniga 3-4 marta (shifokor koʻrsatmasiga qarab).', conditions:'Shamollash, gripp, bosh ogʻrigʻi, isitma.' },
+  'ibuprofen': { usage:'Yalligʻlanishga qarshi, ogʻriq qoldiruvchi va isitma tushiruvchi.', when:'Ovqatdan keyin, kuniga 2-3 marta.', conditions:'Bosh ogʻrigʻi, mushak ogʻrigʻi, isitma, yalligʻlanish.' },
   'amoksitsillin': { usage:'Antibiotik — bakterial infeksiyalarga qarshi.', when:'Shifokor belgilagan kurs davomida, teng oraliqlarda (odatda 8 soatda bir marta).', conditions:'Bakterial infeksiyalar (angina, bronxit va h.k.) — faqat shifokor tayinlashi bilan.' },
-  'omeprazol': { usage:'Oshqozon kislotasini kamaytiradi.', when:'Ovqatdan 30-60 daqiqa oldin, kuniga 1 marta.', conditions:'Gastrit, oshqozon yarasi, qizilo'+String.fromCharCode(0x2019)+'ngach reflyuksi.' },
-  'aspirin': { usage:'Og'+String.fromCharCode(0x2019)+'riq qoldiruvchi, qon suyultiruvchi (kichik dozada).', when:'Ovqatdan keyin, shifokor tavsiyasiga qarab.', conditions:'Bosh og'+String.fromCharCode(0x2019)+'rig'+String.fromCharCode(0x2019)+'i, yurak-qon tomir profilaktikasi.' },
+  'omeprazol': { usage:'Oshqozon kislotasini kamaytiradi.', when:'Ovqatdan 30-60 daqiqa oldin, kuniga 1 marta.', conditions:'Gastrit, oshqozon yarasi, qizilo\u2019ngach reflyuksi.' },
+  'aspirin': { usage:'Ogʻriq qoldiruvchi, qon suyultiruvchi (kichik dozada).', when:'Ovqatdan keyin, shifokor tavsiyasiga qarab.', conditions:'Bosh ogʻrigʻi, yurak-qon tomir profilaktikasi.' },
+  'loratadin': { usage:'Antigistamin — allergiya alomatlarini kamaytiradi.', when:'Kuniga 1 marta, ovqatdan qat\u2019i nazar.', conditions:'Allergik tumov, teri qichishishi, konyunktivit.' },
+  'sitramon': { usage:'Ogʻriq qoldiruvchi va bosh ogʻrigʻiga qarshi kombinatsiyalangan dori.', when:'Ovqatdan keyin, zarurat boʻlganda.', conditions:'Bosh ogʻrigʻi, migren, yengil ogʻriqlar.' },
+  'diklofenak': { usage:'Yalligʻlanishga qarshi kuchli vosita (tabletka yoki geyl shaklida).', when:'Ovqatdan keyin yoki teriga surtish orqali, shifokor koʻrsatmasiga koʻra.', conditions:'Boʻgʻim va mushak ogʻriqlari, artrit, jarohatdan keyingi shish.' },
+  'no-shpa': { usage:'Silliq mushaklar spazmini yumshatadi (drotaverin asosida).', when:'Ogʻriq paytida, kuniga 2-3 marta.', conditions:'Oshqozon-ichak spazmi, bosh ogʻrigʻi, ayollarda oylik davr ogʻrigʻi.' },
+  'enterofuril': { usage:'Ichak infeksiyalariga qarshi antibakterial vosita.', when:'Ovqatdan keyin, kuniga 3-4 marta, qisqa kurs bilan.', conditions:'Bakterial ich ketishi, oziq-ovqatdan zaharlanish.' },
+  'smekta': { usage:'Ichak shilliq qavatini himoya qiluvchi, ich ketishga qarshi.', when:'Ovqatdan oldin, suvda eritib ichiladi.', conditions:'Ich ketishi, oshqozon-ichak yallanishi.' },
+  'validol': { usage:'Yurak sohasidagi yengil noqulaylik va asabiylashishni yumshatadi.', when:'Til ostiga qoʻyib erish, zarurat boʻlganda.', conditions:'Yengil yurak ogʻrigʻi, stress, asabiylashish.' },
+  'corvalol': { usage:'Tinchlantiruvchi va yurak faoliyatini yengillashtiruvchi tomchi.', when:'Suvga tomizib ichiladi, zarurat boʻlganda.', conditions:'Uyqusizlik, asabiylashish, yurak sohasidagi noqulaylik.' },
+  'analgin': { usage:'Kuchli ogʻriq qoldiruvchi va isitma tushiruvchi.', when:'Ovqatdan keyin, zarurat boʻlganda (uzoq muddat tavsiya etilmaydi).', conditions:'Kuchli ogʻriq, yuqori isitma.' },
+  'aktivlangan komir': { usage:'Zaharlanish va ichak gazlarini singdiruvchi sorbent.', when:'Ovqatdan 1-2 soat oldin yoki keyin.', conditions:'Oziq-ovqatdan zaharlanish, meteorizm.' },
+  'mezim': { usage:'Ovqat hazm qilishga yordam beruvchi ferment preparati.', when:'Ovqat vaqtida yoki darhol keyin.', conditions:'Oshqozon osti bezi yetishmovchiligi, ogʻir ovqatdan keyin ogʻirlik.' },
+  'linex': { usage:'Ichak mikroflorasini tiklovchi probiotik.', when:'Ovqat bilan birga, kuniga 3 marta.', conditions:'Antibiotikdan keyin ichak buzilishi, disbakterioz.' },
+  'sitrin': { usage:'Antigistamin — allergiya belgilarini kamaytiradi (tsetirizin asosida).', when:'Kuniga 1 marta, kechqurun tavsiya etiladi.', conditions:'Allergik tumov, teri toshmasi, qichishish.' },
+  'ambroksol': { usage:'Balgʻam koʻchiruvchi, nafas yoʻllarini yumshatuvchi.', when:'Ovqatdan keyin, kuniga 2-3 marta.', conditions:'Nam yoʻtal, bronxit, nafas yoʻllari infeksiyasi.' },
+  'naftizin': { usage:'Burun bitishini qisqa muddatga yoʻqotuvchi tomchi/sprey.', when:'Zarurat boʻlganda, kuniga 2-3 martadan koʻp emas, 5 kundan uzoq emas.', conditions:'Burun bitishi, shamollash, allergik tumov.' },
+  'metformin': { usage:'Qondagi shakar miqdorini pasaytiruvchi vosita.', when:'Ovqat bilan birga, shifokor belgilagan dozada.', conditions:'2-turdagi qandli diabet — faqat shifokor nazorati ostida.' },
+  'enalapril': { usage:'Qon bosimini pasaytiruvchi vosita.', when:'Kuniga 1-2 marta, shifokor koʻrsatmasiga koʻra.', conditions:'Yuqori qon bosimi (gipertoniya), yurak yetishmovchiligi.' },
+  'amlodipin': { usage:'Qon tomirlarini kengaytirib, bosimni pasaytiradi.', when:'Kuniga 1 marta, doimiy qabul rejimida.', conditions:'Yuqori qon bosimi, yurak stenokardiyasi.' },
+  'bisoprolol': { usage:'Yurak urish tezligini va bosimni nazorat qiladi.', when:'Ertalab, kuniga 1 marta.', conditions:'Gipertoniya, aritmiya, yurak yetishmovchiligi.' },
+  'levotiroksin': { usage:'Qalqonsimon bez gormonini oʻrniga bosuvchi vosita.', when:'Ertalab och qoringa, ovqatdan 30-40 daqiqa oldin.', conditions:'Gipotireoz (qalqonsimon bez yetishmovchiligi).' },
+  'vitamin d': { usage:'Suyak va immunitet uchun zarur vitamin.', when:'Ovqat bilan birga, kuniga 1 marta.', conditions:'Vitamin D yetishmovchiligi, suyak zaifligi profilaktikasi.' },
+  'vitamin c': { usage:'Immunitetni mustahkamlovchi antioksidant.', when:'Ovqatdan keyin, kuniga 1 marta.', conditions:'Immunitetni qoʻllab-quvvatlash, shamollash profilaktikasi.' },
+  'magne b6': { usage:'Magniy yetishmovchiligini toʻldiruvchi, asab tizimini tinchlantiruvchi.', when:'Ovqat bilan birga, kuniga 2-3 marta.', conditions:'Asabiylashish, mushak tortishishi, uyqu buzilishi.' },
+};
+const DRUG_ALIASES = {
+  'aktivirlangan komir':'aktivlangan komir', 'faol komir':'aktivlangan komir',
+  'tsetirizin':'sitrin', 'tsetrin':'sitrin',
+  'drotaverin':'no-shpa', 'noshpa':'no-shpa',
+  'nifuroksazid':'enterofuril',
+  'diosmektit':'smekta',
 };
 function renderDrugInfoPanel(){
   const gate = document.getElementById('druginfoGate');
@@ -884,11 +921,13 @@ function renderDrugInfoPanel(){
   `;
 }
 function searchDrug(){
-  const q = document.getElementById('drugQuery').value.trim().toLowerCase();
+  const raw = document.getElementById('drugQuery').value.trim().toLowerCase();
+  const q = DRUG_ALIASES[raw] || raw;
   const wrap = document.getElementById('drugResults');
   const found = DRUG_DB[q];
   if(!found){
-    wrap.innerHTML = `<div class="empty">"${escapeHtml(q)}" topilmadi. Sinov bazasida: Paratsetamol, Ibuprofen, Amoksitsillin, Omeprazol, Aspirin.</div>`;
+    const known = Object.keys(DRUG_DB).map(k=>k.charAt(0).toUpperCase()+k.slice(1)).join(', ');
+    wrap.innerHTML = `<div class="empty">"${escapeHtml(raw)}" hozircha bazada yoʻq.<br><br><b>Bazadagi dorilar (${Object.keys(DRUG_DB).length} ta):</b><br>${known}</div>`;
     return;
   }
   wrap.innerHTML = `
