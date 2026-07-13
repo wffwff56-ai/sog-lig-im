@@ -974,27 +974,68 @@ async function renderStepsBars(){
 
 /* ---------------- CLINICS (premium, mock data) ---------------- */
 const CLINIC_DB = [
-  { name:'Toshkent Tez Tibbiy Yordam Markazi', specialties:['umumiy','yurak','shoshilinch'], phone:'+998 71 233 40 20', address:'Toshkent sh., Chilonzor tumani' },
-  { name:'Republika Ixtisoslashtirilgan Kardiologiya Markazi', specialties:['yurak','bosim'], phone:'+998 71 268 26 06', address:'Toshkent sh., Yunusobod tumani' },
-  { name:'"Konsilium Medikal" klinikasi', specialties:['umumiy','ichki kasalliklar','endokrinologiya'], phone:'+998 71 200 20 20', address:'Toshkent sh., Mirzo Ulug'+String.fromCharCode(0x2019)+'bek tumani' },
-  { name:'"OK Doctor" ko'+String.fromCharCode(0x2019)+'p tarmoqli klinikasi', specialties:['umumiy','bolalar','stomatologiya'], phone:'+998 78 150 03 03', address:'Toshkent sh., Shayxontohur tumani' },
-  { name:'"Neuromed" nevrologiya markazi', specialties:['bosh og'+String.fromCharCode(0x2019)+'rig'+String.fromCharCode(0x2019)+'i','nevrologiya','uyqu'], phone:'+998 71 205 05 05', address:'Toshkent sh., Mirobod tumani' },
-  { name:'"Ibn Sino" respublika klinik markazi', specialties:['umumiy','jarrohlik','ichki kasalliklar'], phone:'+998 71 150 11 11', address:'Toshkent sh., Yakkasaroy tumani' },
+  // Toshkent
+  { name:'Toshkent Tez Tibbiy Yordam Markazi', city:'toshkent', specialties:['umumiy','yurak','shoshilinch'], phone:'+998 71 233 40 20', address:'Toshkent sh., Chilonzor tumani' },
+  { name:'Respublika Ixtisoslashtirilgan Kardiologiya Markazi', city:'toshkent', specialties:['yurak','bosim'], phone:'+998 71 268 26 06', address:'Toshkent sh., Yunusobod tumani' },
+  { name:'"Konsilium Medikal" klinikasi', city:'toshkent', specialties:['umumiy','ichki kasalliklar','endokrinologiya'], phone:'+998 71 200 20 20', address:'Toshkent sh., Mirzo Ulug\u2019bek tumani' },
+  { name:'"OK Doctor" ko\u2019p tarmoqli klinikasi', city:'toshkent', specialties:['umumiy','bolalar','stomatologiya'], phone:'+998 78 150 03 03', address:'Toshkent sh., Shayxontohur tumani' },
+  { name:'"Neuromed" nevrologiya markazi', city:'toshkent', specialties:['bosh og\u2019rig\u2019i','nevrologiya','uyqu'], phone:'+998 71 205 05 05', address:'Toshkent sh., Mirobod tumani' },
+  { name:'"Ibn Sino" respublika klinik markazi', city:'toshkent', specialties:['umumiy','jarrohlik','ichki kasalliklar'], phone:'+998 71 150 11 11', address:'Toshkent sh., Yakkasaroy tumani' },
+  { name:'"Tashkent Eye Center" ko\u2019z klinikasi', city:'toshkent', specialties:['koz','oftalmologiya'], phone:'+998 71 246 88 88', address:'Toshkent sh., Olmazor tumani' },
+  { name:'"Kids Med" bolalar klinikasi', city:'toshkent', specialties:['bolalar','pediatriya'], phone:'+998 78 113 03 03', address:'Toshkent sh., Sergeli tumani' },
+  { name:'"DentPro" stomatologiya markazi', city:'toshkent', specialties:['tish','stomatologiya'], phone:'+998 71 202 02 20', address:'Toshkent sh., Yashnobod tumani' },
+  // Samarqand
+  { name:'Samarqand Viloyat Koʻp Tarmoqli Klinikasi', city:'samarqand', specialties:['umumiy','ichki kasalliklar','jarrohlik'], phone:'+998 66 233 44 55', address:'Samarqand sh., Registon koʻchasi' },
+  { name:'"MedPark Samarqand" klinikasi', city:'samarqand', specialties:['yurak','bosim','nevrologiya'], phone:'+998 66 210 10 10', address:'Samarqand sh., Universitet bulvari' },
+  { name:'Samarqand Bolalar Poliklinikasi', city:'samarqand', specialties:['bolalar','pediatriya'], phone:'+998 66 235 12 12', address:'Samarqand sh., Toshkent koʻchasi' },
+  // Buxoro
+  { name:'Buxoro Viloyat Tez Yordam Markazi', city:'buxoro', specialties:['umumiy','shoshilinch','yurak'], phone:'+998 65 223 11 22', address:'Buxoro sh., Bahouddin Naqshband koʻchasi' },
+  { name:'"Buxoro Med Line" klinikasi', city:'buxoro', specialties:['ichki kasalliklar','endokrinologiya'], phone:'+998 65 221 34 56', address:'Buxoro sh., Markaziy tuman' },
+  // Andijon
+  { name:'Andijon Davlat Tibbiyot Klinikasi', city:'andijon', specialties:['umumiy','jarrohlik','ichki kasalliklar'], phone:'+998 74 223 45 67', address:'Andijon sh., Bogʻishamol koʻchasi' },
+  { name:'"Andijon Kardio" markazi', city:'andijon', specialties:['yurak','bosim'], phone:'+998 74 224 56 78', address:'Andijon sh., Fargʻona yoʻli' },
+  // Fargʻona
+  { name:'Fargʻona Viloyat Koʻp Tarmoqli Shifoxonasi', city:'fargona', specialties:['umumiy','jarrohlik','bolalar'], phone:'+998 73 244 55 66', address:'Fargʻona sh., Al-Fargʻoniy koʻchasi' },
+  { name:'"NeuroFar" nevrologiya klinikasi', city:'fargona', specialties:['bosh og\u2019rig\u2019i','nevrologiya'], phone:'+998 73 245 67 89', address:'Fargʻona sh., Markaziy tuman' },
+  // Namangan
+  { name:'Namangan Viloyat Shifoxonasi', city:'namangan', specialties:['umumiy','ichki kasalliklar','yurak'], phone:'+998 69 234 56 78', address:'Namangan sh., Uychi koʻchasi' },
+  // Nukus (Qoraqalpogʻiston)
+  { name:'Qoraqalpogʻiston Respublika Klinikasi', city:'nukus', specialties:['umumiy','ichki kasalliklar','bolalar'], phone:'+998 61 222 33 44', address:'Nukus sh., Amir Temur koʻchasi' },
+  // Qarshi
+  { name:'Qashqadaryo Viloyat Koʻp Tarmoqli Klinikasi', city:'qarshi', specialties:['umumiy','jarrohlik','yurak'], phone:'+998 75 225 11 22', address:'Qarshi sh., Mustaqillik koʻchasi' },
+  // Termiz
+  { name:'Surxondaryo Viloyat Shifoxonasi', city:'termiz', specialties:['umumiy','ichki kasalliklar'], phone:'+998 76 225 33 44', address:'Termiz sh., Alpomish koʻchasi' },
+  // Jizzax
+  { name:'Jizzax Viloyat Tibbiyot Markazi', city:'jizzax', specialties:['umumiy','bolalar','ichki kasalliklar'], phone:'+998 72 226 22 33', address:'Jizzax sh., Sharof Rashidov koʻchasi' },
+  // Navoiy
+  { name:'Navoiy Viloyat Koʻp Tarmoqli Shifoxonasi', city:'navoiy', specialties:['umumiy','yurak','jarrohlik'], phone:'+998 79 223 44 55', address:'Navoiy sh., Galaba koʻchasi' },
+  // Guliston (Sirdaryo)
+  { name:'Sirdaryo Viloyat Shifoxonasi', city:'guliston', specialties:['umumiy','ichki kasalliklar'], phone:'+998 67 225 66 77', address:'Guliston sh., Markaziy koʻcha' },
+  // Urganch (Xorazm)
+  { name:'Xorazm Viloyat Koʻp Tarmoqli Klinikasi', city:'urganch', specialties:['umumiy','bolalar','yurak'], phone:'+998 62 224 33 22', address:'Urganch sh., Al-Xorazmiy koʻchasi' },
 ];
-function findClinics(symptomText){
-  const q = symptomText.toLowerCase();
-  const scored = CLINIC_DB.map(c=>{
+const CITY_KEYWORDS = ['toshkent','samarqand','buxoro','andijon','fargona','fargʻona','namangan','nukus','qarshi','termiz','jizzax','navoiy','guliston','urganch'];
+function normalizeCity(s){
+  return s.replace('fargʻona','fargona');
+}
+function findClinics(addressText, symptomText){
+  const addr = normalizeCity((addressText||'').toLowerCase());
+  const symptom = (symptomText||'').toLowerCase();
+  let matchedCity = CITY_KEYWORDS.find(c=>addr.includes(normalizeCity(c)));
+  let pool = matchedCity ? CLINIC_DB.filter(c=>c.city===matchedCity) : CLINIC_DB;
+  if(pool.length===0) pool = CLINIC_DB;
+  const scored = pool.map(c=>{
     let score = 0;
-    c.specialties.forEach(s=>{ if(q.includes(s)) score += 2; });
+    c.specialties.forEach(s=>{ if(symptom.includes(s)) score += 2; });
     return {c, score};
   });
   const matched = scored.filter(s=>s.score>0).map(s=>s.c);
-  return matched.length ? matched : CLINIC_DB.slice(0,3);
+  return (matched.length ? matched : pool).slice(0,6);
 }
 function renderClinicsPanel(){
   const gate = document.getElementById('clinicsGate');
   if(!isPremium()){
-    gate.innerHTML = lockedTemplate('Klinikalarni topish', 'Manzilingiz va sog'+String.fromCharCode(0x2019)+'liq muammoingizga mos klinikalarni va telefon raqamlarini ko'+String.fromCharCode(0x2019)+'rish uchun premium kerak.');
+    gate.innerHTML = lockedTemplate('Klinikalarni topish', 'Manzilingiz va sog\u2019liq muammoingizga mos klinikalarni va telefon raqamlarini ko\u2019rish uchun premium kerak.');
     return;
   }
   gate.innerHTML = `
@@ -1002,15 +1043,15 @@ function renderClinicsPanel(){
       <div class="card">
         <h3>Klinika qidirish</h3>
         <div class="field">
-          <label>Manzilingiz (tuman/shahar)</label>
-          <input id="clinicAddress" placeholder="masalan: Toshkent, Chilonzor">
+          <label>Manzilingiz (shahar)</label>
+          <input id="clinicAddress" placeholder="masalan: Samarqand, Buxoro, Andijon...">
         </div>
         <div class="field">
           <label>Sog'liq muammosi</label>
           <textarea id="clinicSymptom" rows="3" placeholder="masalan: yurak og'rig'i, bosh og'rig'i, bosim..."></textarea>
         </div>
         <button class="btn" onclick="searchClinics()">Qidirish</button>
-        <div class="disclaimer">Namuna: hozircha bu bo'lim sinov maʼlumotlar bazasidan foydalanadi. Haqiqiy joylashuv asosida qidirish uchun Google Places kabi xarita API integratsiyasi kerak bo'ladi.</div>
+        <div class="disclaimer">Namuna: hozircha bu bo'lim ${CLINIC_DB.length} ta klinikadan iborat sinov maʼlumotlar bazasidan foydalanadi (asosiy viloyat markazlari). Haqiqiy joylashuv asosida qidirish uchun Google Places kabi xarita API integratsiyasi kerak bo'ladi.</div>
       </div>
       <div class="card">
         <h3>Natijalar</h3>
@@ -1020,8 +1061,9 @@ function renderClinicsPanel(){
   `;
 }
 function searchClinics(){
+  const address = document.getElementById('clinicAddress').value || '';
   const symptom = document.getElementById('clinicSymptom').value || '';
-  const results = findClinics(symptom);
+  const results = findClinics(address, symptom);
   document.getElementById('clinicResults').innerHTML = results.map(c=>`
     <div class="clinic-card">
       <div>
@@ -1032,6 +1074,7 @@ function searchClinics(){
     </div>
   `).join('');
 }
+
 
 /* ---------------- DRUG INFO (premium, mock data) ---------------- */
 const DRUG_DB = {
@@ -1063,6 +1106,25 @@ const DRUG_DB = {
   'vitamin d': { usage:'Suyak va immunitet uchun zarur vitamin.', when:'Ovqat bilan birga, kuniga 1 marta.', conditions:'Vitamin D yetishmovchiligi, suyak zaifligi profilaktikasi.' },
   'vitamin c': { usage:'Immunitetni mustahkamlovchi antioksidant.', when:'Ovqatdan keyin, kuniga 1 marta.', conditions:'Immunitetni qoʻllab-quvvatlash, shamollash profilaktikasi.' },
   'magne b6': { usage:'Magniy yetishmovchiligini toʻldiruvchi, asab tizimini tinchlantiruvchi.', when:'Ovqat bilan birga, kuniga 2-3 marta.', conditions:'Asabiylashish, mushak tortishishi, uyqu buzilishi.' },
+  'furasemid': { usage:'Siydik haydovchi (diuretik) vosita, ortiqcha suyuqlikni chiqaradi.', when:'Ertalab, shifokor koʻrsatmasiga koʻra.', conditions:'Shish, yuqori qon bosimi, yurak yetishmovchiligi — faqat shifokor nazorati ostida.' },
+  'ranitidin': { usage:'Oshqozon kislotasini kamaytiruvchi vosita.', when:'Ovqatdan oldin, kuniga 1-2 marta.', conditions:'Gastrit, oshqozon yarasi.' },
+  'domperidon': { usage:'Koʻngil aynishi va qusishga qarshi, oshqozon boʻshalishini tezlashtiradi.', when:'Ovqatdan 15-30 daqiqa oldin.', conditions:'Koʻngil aynishi, qorin dam boʻlishi, ovqat hazm qilish buzilishi.' },
+  'levomitsetin': { usage:'Keng taʼsir doirasiga ega antibiotik.', when:'Shifokor belgilagan kurs davomida, teng oraliqlarda.', conditions:'Ichak infeksiyalari, bakterial kasalliklar — faqat shifokor tayinlashi bilan.' },
+  'azitromitsin': { usage:'Zamonaviy antibiotik, qisqa kursli.', when:'Ovqatdan 1 soat oldin yoki 2 soat keyin, kuniga 1 marta, 3 kunlik kurs.', conditions:'Bronxit, angina, sinusit — faqat shifokor tayinlashi bilan.' },
+  'ketorol': { usage:'Kuchli ogʻriq qoldiruvchi (yalligʻlanishga qarshi).', when:'Ovqatdan keyin, qisqa muddat (5 kundan koʻp emas).', conditions:'Kuchli ogʻriq, jarohatdan keyingi ogʻriq, tish ogʻrigʻi.' },
+  'nurofen': { usage:'Ibuprofen asosidagi ogʻriq va isitma qoldiruvchi.', when:'Ovqatdan keyin, kuniga 2-3 marta.', conditions:'Bosh ogʻrigʻi, isitma, mushak ogʻrigʻi.' },
+  'panadol': { usage:'Paratsetamol asosidagi ogʻriq va isitma qoldiruvchi.', when:'Ovqatdan keyin, kuniga 3-4 marta.', conditions:'Isitma, bosh ogʻrigʻi, shamollash.' },
+  'fervex': { usage:'Shamollash va gripp belgilariga qarshi kombinatsiyalangan poroshok.', when:'Issiq suvda eritib, kuniga 2-3 marta.', conditions:'Shamollash, gripp, burun bitishi, isitma.' },
+  'terafleu': { usage:'Gripp va shamollash belgilarini yumshatuvchi poroshok.', when:'Issiq suvda eritib, kuniga 2-3 marta.', conditions:'Gripp, shamollash, tana qaqshashi, isitma.' },
+  'bromgeksin': { usage:'Balgʻam suyultiruvchi va koʻchiruvchi vosita.', when:'Ovqatdan keyin, kuniga 3 marta.', conditions:'Quruq va nam yoʻtal, bronxit.' },
+  'faringosept': { usage:'Tomoq shilliq qavatini dezinfeksiya qiluvchi soʻrish tabletkasi.', when:'Ovqatdan keyin, kuniga 3-5 marta soʻriladi.', conditions:'Tomoq ogʻrigʻi, faringit, angina belgilari.' },
+  'strepsils': { usage:'Tomoq ogʻrigʻini yumshatuvchi soʻrish tabletkasi.', when:'Zarurat boʻlganda, 2-3 soatda bir marta.', conditions:'Tomoq ogʻrigʻi, yutinishda noqulaylik.' },
+  'kagosel': { usage:'Virusga qarshi immunitetni qoʻllab-quvvatlovchi vosita.', when:'Ovqatdan keyin, shifokor koʻrsatmasi asosida.', conditions:'Gripp va OʻRVI (yuqori nafas yoʻllari virusli infeksiyasi) profilaktikasi va davosi.' },
+  'arbidol': { usage:'Virusga qarshi vosita.', when:'Ovqatdan oldin, kuniga 4 marta.', conditions:'Gripp, OʻRVI.' },
+  'validol forte': { usage:'Yurak sohasidagi noqulaylikni yumshatuvchi.', when:'Til ostiga, zarurat boʻlganda.', conditions:'Yengil yurak ogʻrigʻi, asabiylashish.' },
+  'kaptopril': { usage:'Qon bosimini tez pasaytiruvchi vosita.', when:'Shifokor koʻrsatmasiga koʻra, ovqatdan 1 soat oldin.', conditions:'Yuqori qon bosimi krizi, gipertoniya.' },
+  'insulin': { usage:'Qondagi shakarni nazorat qiluvchi gormon preparati.', when:'Faqat shifokor belgilagan sxema boʻyicha, in\u2019eksiya orqali.', conditions:'1 va 2-turdagi qandli diabet — qatʼiy shifokor nazorati ostida.' },
+  'kalsiy glyukonat': { usage:'Kalsiy yetishmovchiligini toʻldiruvchi.', when:'Ovqatdan keyin, kuniga 2-3 marta.', conditions:'Kalsiy yetishmovchiligi, suyak va tish salomatligini qoʻllab-quvvatlash.' },
 };
 const DRUG_ALIASES = {
   'aktivirlangan komir':'aktivlangan komir', 'faol komir':'aktivlangan komir',
@@ -1070,6 +1132,10 @@ const DRUG_ALIASES = {
   'drotaverin':'no-shpa', 'noshpa':'no-shpa',
   'nifuroksazid':'enterofuril',
   'diosmektit':'smekta',
+  'azitroks':'azitromitsin', 'sumamed':'azitromitsin',
+  'ketorolak':'ketorol',
+  'ibuklin':'ibuprofen', 'ibufen':'ibuprofen',
+  'efferalgan':'paratsetamol', 'paracetamol':'paratsetamol',
 };
 function renderDrugInfoPanel(){
   const gate = document.getElementById('druginfoGate');
