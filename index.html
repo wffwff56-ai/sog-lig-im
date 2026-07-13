@@ -458,6 +458,13 @@
 
     <!-- MEDS -->
     <section class="panel" id="panel-meds">
+      <div id="notifBanner" class="card" style="display:none; background:var(--gold-soft); border-color:#E2CB9A; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
+        <div>
+          <h3 style="margin:0 0 4px;">🔔 Ovozli eslatmalarni yoqing</h3>
+          <p class="muted" style="margin:0;">Dori vaqti kelganda ovoz va ekranga bildirishnoma chiqishi uchun ruxsat bering</p>
+        </div>
+        <button class="btn gold" onclick="requestNotifPermission()">Ruxsat berish</button>
+      </div>
       <div class="grid cols-2" style="align-items:start;">
         <div class="card">
           <h3>Yangi dori qoʻshish</h3>
@@ -793,14 +800,69 @@ async function renderMeds(){
 }
 function escapeHtml(s){ return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
+/* ---------------- Notifications (sound + OS-level) ---------------- */
+let notifPermission = ('Notification' in window) ? Notification.permission : 'unsupported';
+
+async function requestNotifPermission(){
+  if(!('Notification' in window)){
+    showToast('Bu qurilma/brauzer bildirishnomani qoʻllab-quvvatlamaydi');
+    return;
+  }
+  const result = await Notification.requestPermission();
+  notifPermission = result;
+  updateNotifBanner();
+  if(result==='granted') showToast('Bildirishnoma yoqildi ✓');
+}
+function updateNotifBanner(){
+  const el = document.getElementById('notifBanner');
+  if(!el) return;
+  if(notifPermission==='granted'){
+    el.style.display = 'none';
+  } else {
+    el.style.display = 'flex';
+  }
+}
+
+/* Beep sound generated in-browser (no external file needed) */
+function playReminderSound(){
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    for(let i=0;i<3;i++){
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = 'sine';
+      o.frequency.value = 880;
+      g.gain.value = 0.15;
+      o.connect(g); g.connect(ctx.destination);
+      const start = ctx.currentTime + i*0.35;
+      o.start(start);
+      o.stop(start + 0.22);
+    }
+  }catch(e){ console.error('Audio failed', e); }
+}
+
+function fireMedReminder(med){
+  showToast(`⏰ Vaqt bo'ldi: ${med.name} ichish kerak`);
+  playReminderSound();
+  if(navigator.vibrate) navigator.vibrate([200,100,200]);
+  if(notifPermission==='granted'){
+    try{
+      const n = new Notification('Dori vaqti — SogʻlomYoʻl', {
+        body: `${med.name} ichish vaqti keldi (${med.time})`,
+        tag: 'med-'+med.id,
+        requireInteraction: true,
+      });
+      n.onclick = ()=>{ window.focus(); n.close(); };
+    }catch(e){ console.error('Notification failed', e); }
+  }
+}
+
 /* Reminder check every 30s */
-setInterval(async ()=>{
+setInterval(()=>{
   const now = new Date();
   const hhmm = now.toTimeString().slice(0,5);
   meds.forEach(m=>{
-    if(m.time===hhmm){
-      showToast(`⏰ Vaqt bo'ldi: ${m.name} ichish kerak`);
-    }
+    if(m.time===hhmm) fireMedReminder(m);
   });
 }, 30000);
 
@@ -1070,6 +1132,7 @@ function lockedTemplate(title, desc){
 /* ---------------- Init ---------------- */
 async function init(){
   initFoodSelect();
+  updateNotifBanner();
   await loadSub();
   await loadMeds();
   await loadFoodLog();
