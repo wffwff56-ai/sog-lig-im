@@ -50,6 +50,10 @@
     min-height:100vh;
   }
   /* ---- Top bar ---- */
+  .auth-overlay{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:var(--bg); z-index:1000; padding:20px; }
+  .auth-card{ width:100%; max-width:380px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:28px 24px; }
+  .auth-card input.input{ width:100%; background:var(--bg); border:1px solid var(--line); border-radius:10px; padding:11px 13px; color:var(--ink); font-size:14px; box-sizing:border-box; }
+  .user-pill{ display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink-soft); cursor:pointer; }
   .topbar{
     display:flex;
     align-items:center;
@@ -351,16 +355,43 @@
     text-decoration:none;
   }
 </style>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-<div id="app">
+
+<div id="authOverlay" class="auth-overlay">
+  <div class="auth-card">
+    <div class="brand" style="justify-content:center; margin-bottom:6px;">
+      <div class="brand-mark">S</div>
+      <h1 class="brand-name">SogʻlomYoʻl</h1>
+    </div>
+    <p class="muted" style="text-align:center; margin-bottom:18px;">Davom etish uchun tizimga kiring</p>
+
+    <button class="btn ghost" style="width:100%; margin-bottom:14px;" onclick="signInGoogle()">Google orqali kirish</button>
+    <div style="text-align:center; color:var(--muted); font-size:13px; margin-bottom:14px;">yoki email bilan</div>
+
+    <input id="authEmail" type="email" placeholder="Email" class="input" style="width:100%; margin-bottom:10px;">
+    <input id="authPassword" type="password" placeholder="Parol (kamida 6 belgi)" class="input" style="width:100%; margin-bottom:14px;">
+    <div id="authError" style="color:#c0392b; font-size:13px; margin-bottom:10px; display:none;"></div>
+
+    <button class="btn gold" style="width:100%; margin-bottom:10px;" onclick="signUp()">Roʻyxatdan oʻtish</button>
+    <button class="btn ghost" style="width:100%;" onclick="signIn()">Kirish (allaqachon roʻyxatdan oʻtganman)</button>
+  </div>
+</div>
+
+<div id="app" style="display:none;">
 
   <div class="topbar">
     <div class="brand">
       <div class="brand-mark">S</div>
       <h1 class="brand-name">SogʻlomYoʻl</h1>
     </div>
-    <div id="planPill" class="plan-pill">Bepul reja</div>
+    <div style="display:flex; align-items:center; gap:14px;">
+      <div id="planPill" class="plan-pill">Bepul reja</div>
+      <div id="userPill" class="user-pill" onclick="signOutUser()" title="Chiqish uchun bosing"></div>
+    </div>
   </div>
 
   <nav class="tabs" id="tabs">
@@ -553,6 +584,82 @@
 <div class="toast" id="toast"></div>
 
 <script>
+/* ---------------- Firebase ---------------- */
+const firebaseConfig = {
+  apiKey: "AIzaSyBpA8xbmZRM_Du2TArMxwN798Q70955lAY",
+  authDomain: "sogligim-113ae.firebaseapp.com",
+  projectId: "sogligim-113ae",
+  storageBucket: "sogligim-113ae.firebasestorage.app",
+  messagingSenderId: "939640657660",
+  appId: "1:939640657660:web:23fce8a66fe5f29ac7a979",
+  measurementId: "G-6HK7HP6EQ4"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+let currentUser = null;
+let userDataCache = {};
+
+function authErr(msg){
+  const el = document.getElementById('authError');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+function friendlyAuthError(code){
+  const map = {
+    'auth/email-already-in-use':'Bu email allaqachon roʻyxatdan oʻtgan. "Kirish" tugmasini bosing.',
+    'auth/invalid-email':'Email notoʻgʻri kiritildi.',
+    'auth/weak-password':'Parol kamida 6 belgidan iborat boʻlishi kerak.',
+    'auth/user-not-found':'Bunday foydalanuvchi topilmadi. Avval roʻyxatdan oʻting.',
+    'auth/wrong-password':'Parol notoʻgʻri.',
+    'auth/invalid-credential':'Email yoki parol notoʻgʻri.',
+    'auth/popup-closed-by-user':'Google oynasi yopildi, qayta urinib koʻring.',
+  };
+  return map[code] || 'Xatolik yuz berdi, qayta urinib koʻring.';
+}
+async function signUp(){
+  document.getElementById('authError').style.display='none';
+  const email = document.getElementById('authEmail').value.trim();
+  const pass = document.getElementById('authPassword').value;
+  if(!email || !pass){ authErr('Email va parolni kiriting.'); return; }
+  try{ await auth.createUserWithEmailAndPassword(email, pass); }
+  catch(e){ authErr(friendlyAuthError(e.code)); }
+}
+async function signIn(){
+  document.getElementById('authError').style.display='none';
+  const email = document.getElementById('authEmail').value.trim();
+  const pass = document.getElementById('authPassword').value;
+  if(!email || !pass){ authErr('Email va parolni kiriting.'); return; }
+  try{ await auth.signInWithEmailAndPassword(email, pass); }
+  catch(e){ authErr(friendlyAuthError(e.code)); }
+}
+async function signInGoogle(){
+  document.getElementById('authError').style.display='none';
+  try{ await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
+  catch(e){ authErr(friendlyAuthError(e.code)); }
+}
+async function signOutUser(){
+  if(!confirm('Tizimdan chiqmoqchimisiz?')) return;
+  await auth.signOut();
+}
+
+auth.onAuthStateChanged(async (user)=>{
+  if(user){
+    currentUser = user;
+    document.getElementById('authOverlay').style.display = 'none';
+    document.getElementById('app').style.display = '';
+    document.getElementById('userPill').textContent = (user.email || 'Foydalanuvchi') + ' · Chiqish';
+    const snap = await db.collection('users').doc(user.uid).get();
+    userDataCache = snap.exists ? snap.data() : {};
+    init();
+  } else {
+    currentUser = null;
+    userDataCache = {};
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('authOverlay').style.display = 'flex';
+  }
+});
+
 /* ---------------- Utilities ---------------- */
 const todayKey = () => new Date().toISOString().slice(0,10);
 const fmtDate = (d) => d.toISOString().slice(0,10);
@@ -565,15 +672,16 @@ function showToast(msg){
 }
 
 async function storageGet(key, shared=false){
-  try{
-    const r = await window.storage.get(key, shared);
-    return r ? JSON.parse(r.value) : null;
-  }catch(e){ return null; }
+  return key in userDataCache ? userDataCache[key] : null;
 }
 async function storageSet(key, value, shared=false){
-  try{ await window.storage.set(key, JSON.stringify(value), shared); }
-  catch(e){ console.error('storage set failed', e); }
+  userDataCache[key] = value;
+  if(!currentUser) return;
+  try{ await db.collection('users').doc(currentUser.uid).set({ [key]: value }, { merge:true }); }
+  catch(e){ console.error('Firestore save failed', e); showToast('Saqlashda xatolik, internetni tekshiring'); }
 }
+
+
 
 /* ---------------- Tabs ---------------- */
 const PREMIUM_TABS = ['clinics','druginfo'];
@@ -969,7 +1077,7 @@ async function init(){
   await renderStepsBars();
   renderMeds();
 }
-init();
+
 </script>
 </body>
 </html>
