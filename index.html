@@ -60,6 +60,12 @@
     justify-content:space-between;
     padding:22px 28px 18px;
     border-bottom:1px solid var(--line);
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:rgba(245,247,244,0.78);
+    backdrop-filter:blur(14px) saturate(160%);
+    -webkit-backdrop-filter:blur(14px) saturate(160%);
   }
   .brand{
     display:flex;
@@ -72,6 +78,7 @@
     display:flex;align-items:center;justify-content:center;
     color:white;font-family:'Fraunces',serif;font-weight:700;font-size:17px;
     flex-shrink:0;
+    box-shadow:0 3px 10px rgba(15,92,86,0.28);
   }
   .brand-name{font-size:19px;font-weight:600;font-family:'Fraunces',serif; margin:0;}
   .plan-pill{
@@ -96,8 +103,19 @@
     padding:14px 24px 0;
     overflow-x:auto;
     scrollbar-width:none;
+    position:sticky;
+    top:73px;
+    z-index:19;
+    background:rgba(245,247,244,0.78);
+    backdrop-filter:blur(14px) saturate(160%);
+    -webkit-backdrop-filter:blur(14px) saturate(160%);
   }
   .tabs::-webkit-scrollbar{display:none;}
+  .tab-icon{
+    width:16px; height:16px; flex-shrink:0;
+    opacity:0.75;
+    transition:opacity .15s ease, transform .2s ease;
+  }
   .tab{
     border:none;
     background:transparent;
@@ -112,10 +130,13 @@
     position:relative;
     display:flex;
     align-items:center;
-    gap:6px;
+    gap:7px;
+    transition:color .15s ease, background .15s ease;
   }
-  .tab:hover{color:var(--ink);}
+  .tab:hover{color:var(--ink); background:rgba(15,92,86,0.05);}
+  .tab:hover .tab-icon{opacity:1; transform:translateY(-1px);}
   .tab.active{color:var(--teal-deep);}
+  .tab.active .tab-icon{opacity:1; color:var(--teal);}
   .tab.active::after{
     content:"";
     position:absolute;
@@ -152,6 +173,11 @@
     border-radius:var(--radius);
     padding:20px;
     box-shadow:var(--shadow);
+    transition:box-shadow .2s ease, transform .2s ease;
+  }
+  .card:hover{
+    box-shadow:0 4px 16px rgba(15,92,86,0.09), 0 14px 34px rgba(15,92,86,0.08);
+    transform:translateY(-1px);
   }
   .card h3{margin:0 0 4px; font-size:16px;}
   .muted{color:var(--ink-soft); font-size:13px; line-height:1.5;}
@@ -367,17 +393,17 @@
       <div class="brand-mark">S</div>
       <h1 class="brand-name">SogʻlomYoʻl</h1>
     </div>
-    <p class="muted" style="text-align:center; margin-bottom:18px;">Davom etish uchun tizimga kiring</p>
+    <p class="muted" style="text-align:center; margin-bottom:18px;" data-i18n="auth_subtitle">Davom etish uchun tizimga kiring</p>
 
-    <button class="btn ghost" style="width:100%; margin-bottom:14px;" onclick="signInGoogle()">Google orqali kirish</button>
-    <div style="text-align:center; color:var(--muted); font-size:13px; margin-bottom:14px;">yoki email bilan</div>
+    <button class="btn ghost" style="width:100%; margin-bottom:14px;" onclick="signInGoogle()" data-i18n="auth_google">Google orqali kirish</button>
+    <div style="text-align:center; color:var(--muted); font-size:13px; margin-bottom:14px;" data-i18n="auth_or_email">yoki email bilan</div>
 
     <input id="authEmail" type="email" placeholder="Email" class="input" style="width:100%; margin-bottom:10px;">
-    <input id="authPassword" type="password" placeholder="Parol (kamida 6 belgi)" class="input" style="width:100%; margin-bottom:14px;">
+    <input id="authPassword" type="password" placeholder="Parol (kamida 6 belgi)" class="input" style="width:100%; margin-bottom:14px;" data-i18n-placeholder="auth_password_ph">
     <div id="authError" style="color:#c0392b; font-size:13px; margin-bottom:10px; display:none;"></div>
 
-    <button class="btn gold" style="width:100%; margin-bottom:10px;" onclick="signUp()">Roʻyxatdan oʻtish</button>
-    <button class="btn ghost" style="width:100%;" onclick="signIn()">Kirish (allaqachon roʻyxatdan oʻtganman)</button>
+    <button class="btn gold" style="width:100%; margin-bottom:10px;" onclick="signUp()" data-i18n="auth_signup">Roʻyxatdan oʻtish</button>
+    <button class="btn ghost" style="width:100%;" onclick="signIn()" data-i18n="auth_signin">Kirish (allaqachon roʻyxatdan oʻtganman)</button>
   </div>
 </div>
 
@@ -389,19 +415,24 @@
       <h1 class="brand-name">SogʻlomYoʻl</h1>
     </div>
     <div style="display:flex; align-items:center; gap:14px;">
+      <select id="langSelect" onchange="setLang(this.value)" style="padding:6px 10px; border-radius:100px; border:1px solid var(--line); background:var(--surface-2); color:var(--ink); font-size:12px; font-weight:600; cursor:pointer;">
+        <option value="uz">🇺🇿 Oʻzbekcha</option>
+        <option value="ru">🇷🇺 Русский</option>
+        <option value="en">🇬🇧 English</option>
+      </select>
       <div id="planPill" class="plan-pill">Bepul reja</div>
       <div id="userPill" class="user-pill" onclick="signOutUser()" title="Chiqish uchun bosing"></div>
     </div>
   </div>
 
   <nav class="tabs" id="tabs">
-    <button class="tab active" data-tab="dashboard">Bosh sahifa</button>
-    <button class="tab" data-tab="meds">Dorilar</button>
-    <button class="tab" data-tab="calories">Kaloriya</button>
-    <button class="tab" data-tab="steps">Qadamlar</button>
-    <button class="tab" data-tab="clinics">Klinikalar <span class="lock">Premium</span></button>
-    <button class="tab" data-tab="druginfo">Dori maʼlumoti <span class="lock">Premium</span></button>
-    <button class="tab" data-tab="premium">Obuna</button>
+    <button class="tab active" data-tab="dashboard"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/></svg><span data-i18n="nav_dashboard">Bosh sahifa</span></button>
+    <button class="tab" data-tab="meds"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="18" height="7" rx="3.5" transform="rotate(-45 12 12)"/><line x1="12" y1="7.5" x2="12" y2="16.5" transform="rotate(-45 12 12)"/></svg><span data-i18n="nav_meds">Dorilar</span></button>
+    <button class="tab" data-tab="calories"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1 3-2 4-2 7a4 4 0 0 0 8 0c0-1.5-1-2.5-1-2.5s1 4-2 4c-2 0-1.5-2.5-1.5-4C13.5 4 12 2 12 2z"/><path d="M6 14a6 6 0 1 0 12 0c0-2-1-3-1-3s.5 5-3 5-3-3-3-3-1 1-1 1"/></svg><span data-i18n="nav_calories">Kaloriya</span></button>
+    <button class="tab" data-tab="steps"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4a2 2 0 1 1 3 1.7C10.5 6.5 10 7.5 10 9c0 2 1.5 2 1.5 4 0 1.5-1 2-2 2a2 2 0 1 1 0-4"/><path d="M16 12a2 2 0 1 1 3 1.7c-.5.8-1 1.8-1 3.3 0 2 1.5 2 1.5 4 0 1.5-1 2-2 2a2 2 0 1 1 0-4"/></svg><span data-i18n="nav_steps">Qadamlar</span></button>
+    <button class="tab" data-tab="clinics"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.5-7-11.5A7 7 0 0 1 19 9.5C19 14.5 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span data-i18n="nav_clinics">Klinikalar</span> <span class="lock" data-i18n="premium_badge">Premium</span></button>
+    <button class="tab" data-tab="druginfo"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.5" r="0.5" fill="currentColor"/></svg><span data-i18n="nav_druginfo">Dori maʼlumoti</span> <span class="lock" data-i18n="premium_badge">Premium</span></button>
+    <button class="tab" data-tab="premium"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.9 6.3L21 9.3l-4.5 4.5L17.6 21 12 17.8 6.4 21l1.1-7.2L3 9.3l6.1-1L12 2z"/></svg><span data-i18n="nav_premium">Obuna</span></button>
   </nav>
 
   <main>
@@ -409,8 +440,8 @@
     <section class="panel active" id="panel-dashboard">
       <div class="grid cols-2" style="align-items:start;">
         <div class="card rings-card">
-          <h3 style="color:white;">Bugungi holat</h3>
-          <p class="muted">Kunlik ko'rsatkichlaringiz shu yerda jamlanadi</p>
+          <h3 style="color:white;" data-i18n="dash_today_title">Bugungi holat</h3>
+          <p class="muted" data-i18n="dash_today_desc">Kunlik ko'rsatkichlaringiz shu yerda jamlanadi</p>
           <div class="rings-wrap" style="margin-top:14px;">
             <svg class="ring" width="96" height="96" viewBox="0 0 96 96">
               <circle cx="48" cy="48" r="40" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="10"/>
@@ -418,40 +449,40 @@
             </svg>
             <div class="ring-stat">
               <div class="num" id="dashSteps">0</div>
-              <div class="lab">Qadam</div>
+              <div class="lab" data-i18n="lab_steps">Qadam</div>
             </div>
             <div class="ring-stat">
               <div class="num" id="dashKcal">0</div>
-              <div class="lab">Kaloriya</div>
+              <div class="lab" data-i18n="lab_kcal">Kaloriya</div>
             </div>
             <div class="ring-stat">
               <div class="num" id="dashMeds">0/0</div>
-              <div class="lab">Dori qabul qilindi</div>
+              <div class="lab" data-i18n="lab_meds_taken">Dori qabul qilindi</div>
             </div>
           </div>
         </div>
         <div class="card">
-          <h3>Bugungi dorilar</h3>
-          <p class="muted">Vaqtida ichishni unutmang</p>
+          <h3 data-i18n="dash_meds_title">Bugungi dorilar</h3>
+          <p class="muted" data-i18n="dash_meds_desc">Vaqtida ichishni unutmang</p>
           <div id="dashMedsList" style="margin-top:8px;"></div>
         </div>
       </div>
 
       <div class="grid cols-3" style="margin-top:18px;">
         <div class="card">
-          <h3>Dori qoʻshish</h3>
-          <p class="muted">Tez orada eslatma sozlash</p>
-          <button class="btn ghost" style="margin-top:10px; width:100%;" onclick="goTab('meds')">O'tish →</button>
+          <h3 data-i18n="qc_meds_title">Dori qoʻshish</h3>
+          <p class="muted" data-i18n="qc_meds_desc">Tez orada eslatma sozlash</p>
+          <button class="btn ghost" style="margin-top:10px; width:100%;" onclick="goTab('meds')" data-i18n="qc_go">O'tish →</button>
         </div>
         <div class="card">
-          <h3>Ovqat kiritish</h3>
-          <p class="muted">Kaloriyangizni kuzatib boring</p>
-          <button class="btn ghost" style="margin-top:10px; width:100%;" onclick="goTab('calories')">O'tish →</button>
+          <h3 data-i18n="qc_food_title">Ovqat kiritish</h3>
+          <p class="muted" data-i18n="qc_food_desc">Kaloriyangizni kuzatib boring</p>
+          <button class="btn ghost" style="margin-top:10px; width:100%;" onclick="goTab('calories')" data-i18n="qc_go">O'tish →</button>
         </div>
         <div class="card">
-          <h3>Qadam kiritish</h3>
-          <p class="muted">Bugungi yurgan qadamingiz</p>
-          <button class="btn ghost" style="margin-top:10px; width:100%;" onclick="goTab('steps')">O'tish →</button>
+          <h3 data-i18n="qc_steps_title">Qadam kiritish</h3>
+          <p class="muted" data-i18n="qc_steps_desc">Bugungi yurgan qadamingiz</p>
+          <button class="btn ghost" style="margin-top:10px; width:100%;" onclick="goTab('steps')" data-i18n="qc_go">O'tish →</button>
         </div>
       </div>
     </section>
@@ -460,65 +491,82 @@
     <section class="panel" id="panel-meds">
       <div id="notifBanner" class="card" style="display:none; background:var(--gold-soft); border-color:#E2CB9A; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
         <div>
-          <h3 style="margin:0 0 4px;">🔔 Ovozli eslatmalarni yoqing</h3>
-          <p class="muted" style="margin:0;">Dori vaqti kelganda ovoz va ekranga bildirishnoma chiqishi uchun ruxsat bering</p>
+          <h3 style="margin:0 0 4px;" data-i18n="notif_title">🔔 Ovozli eslatmalarni yoqing</h3>
+          <p class="muted" style="margin:0;" data-i18n="notif_desc">Dori vaqti kelganda ovoz va ekranga bildirishnoma chiqishi uchun ruxsat bering</p>
         </div>
-        <button class="btn gold" onclick="requestNotifPermission()">Ruxsat berish</button>
+        <button class="btn gold" onclick="requestNotifPermission()" data-i18n="notif_allow">Ruxsat berish</button>
       </div>
       <div class="grid cols-2" style="align-items:start;">
         <div class="card">
-          <h3>Yangi dori qoʻshish</h3>
+          <h3 data-i18n="meds_add_title">Yangi dori qoʻshish</h3>
           <div class="field">
-            <label>Dori nomi</label>
-            <input id="medName" placeholder="masalan: Paratsetamol">
+            <label data-i18n="meds_name_label">Dori nomi</label>
+            <input id="medName" placeholder="masalan: Paratsetamol" data-i18n-placeholder="meds_name_ph">
           </div>
           <div class="row">
             <div class="field">
-              <label>Qabul vaqti</label>
+              <label data-i18n="meds_time_label">Qabul vaqti</label>
               <input id="medTime" type="time" value="08:00">
             </div>
             <div class="field">
-              <label>Necha kunlik kurs (ixtiyoriy)</label>
+              <label data-i18n="meds_days_label">Necha kunlik kurs (ixtiyoriy)</label>
               <input id="medDays" type="number" placeholder="masalan: 7">
             </div>
           </div>
-          <button class="btn" onclick="addMed()">Qoʻshish</button>
+          <button class="btn" onclick="addMed()" data-i18n="btn_add">Qoʻshish</button>
         </div>
         <div class="card">
-          <h3>Mening dorilarim</h3>
+          <h3 data-i18n="meds_my_title">Mening dorilarim</h3>
           <div id="medsList"></div>
         </div>
       </div>
-      <div class="disclaimer">Bu ilova faqat eslatma vositasi. Dozani oʻzgartirish yoki toʻxtatishdan oldin shifokoringiz bilan maslahatlashing.</div>
+      <div class="disclaimer" data-i18n="meds_disclaimer">Bu ilova faqat eslatma vositasi. Dozani oʻzgartirish yoki toʻxtatishdan oldin shifokoringiz bilan maslahatlashing.</div>
     </section>
 
     <!-- CALORIES -->
     <section class="panel" id="panel-calories">
       <div class="grid cols-2" style="align-items:start;">
         <div class="card">
-          <h3>Ovqat qoʻshish</h3>
+          <h3 data-i18n="cal_add_title">Ovqat qoʻshish</h3>
           <div class="field">
-            <label>Mahsulot</label>
+            <label data-i18n="cal_product_label">Mahsulot</label>
             <select id="foodSelect"></select>
           </div>
           <div class="field">
-            <label>Miqdori (gramm yoki dona)</label>
+            <label data-i18n="cal_qty_label">Miqdori (gramm yoki dona)</label>
             <input id="foodQty" type="number" value="100">
           </div>
-          <button class="btn" onclick="addFood()">Qoʻshish</button>
+          <button class="btn" onclick="addFood()" data-i18n="btn_add">Qoʻshish</button>
           <div class="field" style="margin-top:16px;">
-            <label>Kunlik maqsad (kkal)</label>
+            <label data-i18n="cal_goal_label">Kunlik maqsad (kkal)</label>
             <input id="calGoal" type="number" value="2000" onchange="saveGoal()">
           </div>
         </div>
         <div class="card">
-          <h3>Bugungi ovqatlanish</h3>
+          <h3 data-i18n="cal_today_title">Bugungi ovqatlanish</h3>
           <div id="foodLog"></div>
           <div style="margin-top:12px; padding-top:12px; border-top:1px solid var(--line); display:flex; justify-content:space-between; font-weight:700;">
-            <span>Jami</span>
+            <span data-i18n="cal_total">Jami</span>
             <span id="foodTotal">0 kkal</span>
           </div>
         </div>
+      </div>
+
+      <div class="card" style="margin-top:18px;">
+        <h3 data-i18n="bmi_title">Tana massasi indeksi (BMI)</h3>
+        <p class="muted" data-i18n="bmi_desc">Bo'y va vazningizga qarab BMI'ni hisoblang</p>
+        <div class="row" style="margin-top:10px;">
+          <div class="field">
+            <label data-i18n="bmi_height_label">Bo'y (sm)</label>
+            <input id="bmiHeight" type="number" placeholder="170" oninput="calcBmi()">
+          </div>
+          <div class="field">
+            <label data-i18n="bmi_weight_label">Vazn (kg)</label>
+            <input id="bmiWeight" type="number" placeholder="65" oninput="calcBmi()">
+          </div>
+        </div>
+        <div id="bmiResult"></div>
+        <div class="disclaimer" data-i18n="bmi_disclaimer">BMI — umumiy yo'naltiruvchi ko'rsatkich, tibbiy tashxis emas. Aniq baholash uchun shifokorga murojaat qiling.</div>
       </div>
     </section>
 
@@ -526,20 +574,20 @@
     <section class="panel" id="panel-steps">
       <div class="grid cols-2" style="align-items:start;">
         <div class="card">
-          <h3>Bugungi qadamni kiriting</h3>
-          <p class="muted">Telefoningiz hisoblagichidan yoki taxminan kiriting</p>
+          <h3 data-i18n="steps_add_title">Bugungi qadamni kiriting</h3>
+          <p class="muted" data-i18n="steps_add_desc">Telefoningiz hisoblagichidan yoki taxminan kiriting</p>
           <div class="field" style="margin-top:10px;">
-            <label>Qadamlar soni</label>
+            <label data-i18n="steps_count_label">Qadamlar soni</label>
             <input id="stepsInput" type="number" placeholder="masalan: 6500">
           </div>
-          <button class="btn" onclick="saveSteps()">Saqlash</button>
+          <button class="btn" onclick="saveSteps()" data-i18n="btn_save">Saqlash</button>
           <div class="field" style="margin-top:16px;">
-            <label>Kunlik maqsad</label>
+            <label data-i18n="steps_goal_label">Kunlik maqsad</label>
             <input id="stepsGoal" type="number" value="8000" onchange="saveStepsGoal()">
           </div>
         </div>
         <div class="card">
-          <h3>Oxirgi 7 kun</h3>
+          <h3 data-i18n="steps_week_title">Oxirgi 7 kun</h3>
           <div class="bars" id="stepsBars"></div>
         </div>
       </div>
@@ -558,30 +606,30 @@
     <!-- PREMIUM -->
     <section class="panel" id="panel-premium">
       <div class="card">
-        <h3>Premium obuna</h3>
-        <p class="muted">Klinikalarni topish va dori haqida batafsil maʼlumot — premium foydalanuvchilar uchun.</p>
+        <h3 data-i18n="prem_title">Premium obuna</h3>
+        <p class="muted" data-i18n="prem_desc">Klinikalarni topish va dori haqida batafsil maʼlumot — premium foydalanuvchilar uchun.</p>
         <div class="plans">
           <div class="plan-card">
-            <span class="chip">1 hafta</span>
-            <div class="plan-price">Bepul</div>
-            <p class="muted" style="flex:1;">Barcha premium funksiyalarni sinab ko'ring</p>
-            <button class="btn ghost" onclick="activatePlan('trial')">Sinovni boshlash</button>
+            <span class="chip" data-i18n="prem_trial_chip">1 hafta</span>
+            <div class="plan-price" data-i18n="prem_free">Bepul</div>
+            <p class="muted" style="flex:1;" data-i18n="prem_trial_desc">Barcha premium funksiyalarni sinab ko'ring</p>
+            <button class="btn ghost" onclick="activatePlan('trial')" data-i18n="prem_trial_btn">Sinovni boshlash</button>
           </div>
           <div class="plan-card featured">
-            <span class="chip done">Tavsiya etiladi</span>
-            <div class="plan-price">70,000 <span>so'm / oy</span></div>
-            <p class="muted" style="flex:1;">Oylik obuna, istalgan vaqt bekor qilish mumkin</p>
-            <button class="btn gold" onclick="activatePlan('monthly')">Tanlash</button>
+            <span class="chip done" data-i18n="prem_recommended">Tavsiya etiladi</span>
+            <div class="plan-price">70,000 <span data-i18n="prem_per_month">so'm / oy</span></div>
+            <p class="muted" style="flex:1;" data-i18n="prem_monthly_desc">Oylik obuna, istalgan vaqt bekor qilish mumkin</p>
+            <button class="btn gold" onclick="activatePlan('monthly')" data-i18n="prem_choose">Tanlash</button>
           </div>
           <div class="plan-card">
-            <span class="chip">Yillik</span>
-            <div class="plan-price">300,000 <span>so'm / yil</span></div>
-            <p class="muted" style="flex:1;">2 oyga yaqin tejash bilan</p>
-            <button class="btn ghost" onclick="activatePlan('yearly')">Tanlash</button>
+            <span class="chip" data-i18n="prem_yearly_chip">Yillik</span>
+            <div class="plan-price">300,000 <span data-i18n="prem_per_year">so'm / yil</span></div>
+            <p class="muted" style="flex:1;" data-i18n="prem_yearly_desc">2 oyga yaqin tejash bilan</p>
+            <button class="btn ghost" onclick="activatePlan('yearly')" data-i18n="prem_choose">Tanlash</button>
           </div>
         </div>
-        <p class="muted" style="margin-top:10px;">Haftalik reja: 20,000 so'm — <a href="#" onclick="activatePlan('weekly'); return false;" style="color:var(--teal-deep); font-weight:600;">shu tarifni tanlash</a></p>
-        <div class="disclaimer">Bu — demo prototip. Haqiqiy toʻlov (Payme/Click) ulanishi uchun backend server va yuridik shaxs (IP/MChJ) kerak bo'ladi. Hozircha tugmalar premium holatini faqat shu qurilmada faollashtiradi.</div>
+        <p class="muted" style="margin-top:10px;"><span data-i18n="prem_weekly_line">Haftalik reja: 20,000 so'm —</span> <a href="#" onclick="activatePlan('weekly'); return false;" style="color:var(--teal-deep); font-weight:600;" data-i18n="prem_weekly_link">shu tarifni tanlash</a></p>
+        <div class="disclaimer" data-i18n="prem_disclaimer">Bu — demo prototip. Haqiqiy toʻlov (Payme/Click) ulanishi uchun backend server va yuridik shaxs (IP/MChJ) kerak bo'ladi. Hozircha tugmalar premium holatini faqat shu qurilmada faollashtiradi.</div>
         <div id="subStatus" style="margin-top:14px;"></div>
       </div>
     </section>
@@ -668,6 +716,337 @@ auth.onAuthStateChanged(async (user)=>{
 });
 
 /* ---------------- Utilities ---------------- */
+/* ---------------- i18n ---------------- */
+const I18N = {
+  uz: {
+    auth_subtitle: "Davom etish uchun tizimga kiring",
+    auth_google: "Google orqali kirish",
+    auth_or_email: "yoki email bilan",
+    auth_signup: "Roʻyxatdan oʻtish",
+    auth_signin: "Kirish (allaqachon roʻyxatdan oʻtganman)",
+    auth_password_ph: "Parol (kamida 6 belgi)",
+    nav_dashboard: "Bosh sahifa",
+    nav_meds: "Dorilar",
+    nav_calories: "Kaloriya",
+    nav_steps: "Qadamlar",
+    nav_clinics: "Klinikalar",
+    premium_badge: "Premium",
+    nav_druginfo: "Dori maʼlumoti",
+    nav_premium: "Obuna",
+    dash_today_title: "Bugungi holat",
+    dash_today_desc: "Kunlik ko'rsatkichlaringiz shu yerda jamlanadi",
+    lab_steps: "Qadam",
+    lab_kcal: "Kaloriya",
+    lab_meds_taken: "Dori qabul qilindi",
+    dash_meds_title: "Bugungi dorilar",
+    dash_meds_desc: "Vaqtida ichishni unutmang",
+    qc_meds_title: "Dori qoʻshish",
+    qc_meds_desc: "Tez orada eslatma sozlash",
+    qc_go: "O'tish →",
+    qc_food_title: "Ovqat kiritish",
+    qc_food_desc: "Kaloriyangizni kuzatib boring",
+    qc_steps_title: "Qadam kiritish",
+    qc_steps_desc: "Bugungi yurgan qadamingiz",
+    notif_title: "🔔 Ovozli eslatmalarni yoqing",
+    notif_desc: "Dori vaqti kelganda ovoz va ekranga bildirishnoma chiqishi uchun ruxsat bering",
+    notif_allow: "Ruxsat berish",
+    meds_add_title: "Yangi dori qoʻshish",
+    meds_name_label: "Dori nomi",
+    meds_name_ph: "masalan: Paratsetamol",
+    meds_time_label: "Qabul vaqti",
+    meds_days_label: "Necha kunlik kurs (ixtiyoriy)",
+    btn_add: "Qoʻshish",
+    meds_my_title: "Mening dorilarim",
+    meds_disclaimer: "Bu ilova faqat eslatma vositasi. Dozani oʻzgartirish yoki toʻxtatishdan oldin shifokoringiz bilan maslahatlashing.",
+    cal_add_title: "Ovqat qoʻshish",
+    cal_product_label: "Mahsulot",
+    cal_qty_label: "Miqdori (gramm yoki dona)",
+    cal_goal_label: "Kunlik maqsad (kkal)",
+    cal_today_title: "Bugungi ovqatlanish",
+    cal_total: "Jami",
+    bmi_title: "Tana massasi indeksi (BMI)",
+    bmi_desc: "Bo'y va vazningizga qarab BMI'ni hisoblang",
+    bmi_height_label: "Bo'y (sm)",
+    bmi_weight_label: "Vazn (kg)",
+    bmi_disclaimer: "BMI — umumiy yo'naltiruvchi ko'rsatkich, tibbiy tashxis emas. Aniq baholash uchun shifokorga murojaat qiling.",
+    steps_add_title: "Bugungi qadamni kiriting",
+    steps_add_desc: "Telefoningiz hisoblagichidan yoki taxminan kiriting",
+    steps_count_label: "Qadamlar soni",
+    btn_save: "Saqlash",
+    steps_goal_label: "Kunlik maqsad",
+    steps_week_title: "Oxirgi 7 kun",
+    prem_title: "Premium obuna",
+    prem_desc: "Klinikalarni topish va dori haqida batafsil maʼlumot — premium foydalanuvchilar uchun.",
+    prem_trial_chip: "1 hafta",
+    prem_free: "Bepul",
+    prem_trial_desc: "Barcha premium funksiyalarni sinab ko'ring",
+    prem_trial_btn: "Sinovni boshlash",
+    prem_recommended: "Tavsiya etiladi",
+    prem_per_month: "so'm / oy",
+    prem_monthly_desc: "Oylik obuna, istalgan vaqt bekor qilish mumkin",
+    prem_choose: "Tanlash",
+    prem_yearly_chip: "Yillik",
+    prem_per_year: "so'm / yil",
+    prem_yearly_desc: "2 oyga yaqin tejash bilan",
+    prem_weekly_line: "Haftalik reja: 20,000 so'm —",
+    prem_weekly_link: "shu tarifni tanlash",
+    prem_disclaimer: "Bu — demo prototip. Haqiqiy toʻlov (Payme/Click) ulanishi uchun backend server va yuridik shaxs (IP/MChJ) kerak bo'ladi. Hozircha tugmalar premium holatini faqat shu qurilmada faollashtiradi.",
+    clinics_locked_title: "Klinikalarni topish",
+    clinics_locked_desc: "Manzilingiz va sog'liq muammoingizga mos klinikalarni va telefon raqamlarini ko'rish uchun premium kerak.",
+    clinics_search_title: "Klinika qidirish",
+    clinics_address_label: "Manzilingiz (shahar)",
+    clinics_address_ph: "masalan: Samarqand, Buxoro, Andijon...",
+    clinics_symptom_label: "Sog'liq muammosi",
+    clinics_symptom_ph: "masalan: yurak og'rig'i, bosh og'rig'i, bosim...",
+    btn_search: "Qidirish",
+    clinics_disclaimer: "Namuna: hozircha bu bo'lim {n} ta klinikadan iborat sinov maʼlumotlar bazasidan foydalanadi (asosiy viloyat markazlari). Haqiqiy joylashuv asosida qidirish uchun Google Places kabi xarita API integratsiyasi kerak bo'ladi.",
+    clinics_results_title: "Natijalar",
+    clinics_empty: "Qidiruv natijalari shu yerda chiqadi",
+    druginfo_locked_title: "Dori maʼlumoti",
+    druginfo_locked_desc: "Dori nomi va uning nima uchun, qachon, qanday kasalliklar uchun ichilishini bilish uchun premium kerak.",
+    druginfo_title: "Dori haqida maʼlumot",
+    druginfo_name_label: "Dori nomini kiriting",
+    druginfo_name_ph: "masalan: Paratsetamol",
+    druginfo_disclaimer: "Bu maʼlumot faqat umumiy maʼlumot uchun va tibbiy maslahat oʻrnini bosmaydi. Dori qabul qilishdan oldin shifokor yoki farmatsevt bilan maslahatlashing. Bazamiz hozircha {n} ta eng koʻp ishlatiladigan dorini oʻz ichiga oladi.",
+    druginfo_registry_title: "Dori rasman roʻyxatdan oʻtganini tekshirmoqchimisiz?",
+    druginfo_registry_desc: "Oʻzbekiston Respublikasining rasmiy Dori vositalari davlat reestrida qidiring.",
+    druginfo_registry_link: "Rasmiy reestrni ochish ↗",
+    locked_sample_clinic: "Namuna klinika",
+    locked_sample_address: "Manzil ko'rinadi",
+    locked_go_premium: "Premiumga o'tish",
+  },
+  ru: {
+    auth_subtitle: "Войдите, чтобы продолжить",
+    auth_google: "Войти через Google",
+    auth_or_email: "или через email",
+    auth_signup: "Зарегистрироваться",
+    auth_signin: "Войти (уже есть аккаунт)",
+    auth_password_ph: "Пароль (минимум 6 символов)",
+    nav_dashboard: "Главная",
+    nav_meds: "Лекарства",
+    nav_calories: "Калории",
+    nav_steps: "Шаги",
+    nav_clinics: "Клиники",
+    premium_badge: "Premium",
+    nav_druginfo: "О лекарствах",
+    nav_premium: "Подписка",
+    dash_today_title: "Сегодняшнее состояние",
+    dash_today_desc: "Ваши ежедневные показатели собраны здесь",
+    lab_steps: "Шаги",
+    lab_kcal: "Калории",
+    lab_meds_taken: "Лекарства приняты",
+    dash_meds_title: "Лекарства на сегодня",
+    dash_meds_desc: "Не забудьте принять вовремя",
+    qc_meds_title: "Добавить лекарство",
+    qc_meds_desc: "Быстрая настройка напоминания",
+    qc_go: "Перейти →",
+    qc_food_title: "Добавить еду",
+    qc_food_desc: "Отслеживайте свои калории",
+    qc_steps_title: "Ввести шаги",
+    qc_steps_desc: "Сколько шагов вы прошли сегодня",
+    notif_title: "🔔 Включите звуковые напоминания",
+    notif_desc: "Разрешите звук и уведомления на экране, когда придёт время приёма лекарства",
+    notif_allow: "Разрешить",
+    meds_add_title: "Добавить новое лекарство",
+    meds_name_label: "Название лекарства",
+    meds_name_ph: "например: Парацетамол",
+    meds_time_label: "Время приёма",
+    meds_days_label: "Длительность курса (необязательно)",
+    btn_add: "Добавить",
+    meds_my_title: "Мои лекарства",
+    meds_disclaimer: "Это приложение — лишь инструмент напоминания. Перед изменением дозы или прекращением приёма проконсультируйтесь с врачом.",
+    cal_add_title: "Добавить еду",
+    cal_product_label: "Продукт",
+    cal_qty_label: "Количество (грамм или шт.)",
+    cal_goal_label: "Дневная цель (ккал)",
+    cal_today_title: "Питание сегодня",
+    cal_total: "Итого",
+    bmi_title: "Индекс массы тела (ИМТ)",
+    bmi_desc: "Рассчитайте ИМТ по росту и весу",
+    bmi_height_label: "Рост (см)",
+    bmi_weight_label: "Вес (кг)",
+    bmi_disclaimer: "ИМТ — общий ориентировочный показатель, а не диагноз. Для точной оценки обратитесь к врачу.",
+    steps_add_title: "Введите шаги за сегодня",
+    steps_add_desc: "Введите данные со шагомера телефона или примерно",
+    steps_count_label: "Количество шагов",
+    btn_save: "Сохранить",
+    steps_goal_label: "Дневная цель",
+    steps_week_title: "Последние 7 дней",
+    prem_title: "Премиум подписка",
+    prem_desc: "Поиск клиник и подробная информация о лекарствах — для премиум пользователей.",
+    prem_trial_chip: "1 неделя",
+    prem_free: "Бесплатно",
+    prem_trial_desc: "Попробуйте все премиум функции",
+    prem_trial_btn: "Начать пробный период",
+    prem_recommended: "Рекомендуем",
+    prem_per_month: "сум / мес",
+    prem_monthly_desc: "Ежемесячная подписка, отмена в любое время",
+    prem_choose: "Выбрать",
+    prem_yearly_chip: "Годовой",
+    prem_per_year: "сум / год",
+    prem_yearly_desc: "Экономия почти 2 месяца",
+    prem_weekly_line: "Недельный план: 20 000 сум —",
+    prem_weekly_link: "выбрать этот план",
+    prem_disclaimer: "Это демо-прототип. Для реальной оплаты (Payme/Click) нужен backend-сервер и юрлицо (ИП/ООО). Пока кнопки активируют премиум только на этом устройстве.",
+    clinics_locked_title: "Поиск клиник",
+    clinics_locked_desc: "Для поиска клиник по адресу и симптомам, а также телефонов — нужна премиум подписка.",
+    clinics_search_title: "Поиск клиники",
+    clinics_address_label: "Ваш адрес (город)",
+    clinics_address_ph: "например: Самарканд, Бухара, Андижан...",
+    clinics_symptom_label: "Проблема со здоровьем",
+    clinics_symptom_ph: "например: боль в сердце, головная боль, давление...",
+    btn_search: "Искать",
+    clinics_disclaimer: "Демо: сейчас этот раздел использует тестовую базу из {n} клиник (областные центры). Для поиска по реальному местоположению нужна интеграция карт, например Google Places.",
+    clinics_results_title: "Результаты",
+    clinics_empty: "Результаты поиска появятся здесь",
+    druginfo_locked_title: "Информация о лекарствах",
+    druginfo_locked_desc: "Для информации о том, зачем, когда и при каких болезнях принимать лекарство — нужна премиум подписка.",
+    druginfo_title: "Информация о лекарстве",
+    druginfo_name_label: "Введите название лекарства",
+    druginfo_name_ph: "например: Парацетамол",
+    druginfo_disclaimer: "Эта информация носит общий характер и не заменяет консультацию врача. Перед приёмом лекарства проконсультируйтесь с врачом или фармацевтом. Наша база пока включает {n} самых распространённых лекарств.",
+    druginfo_registry_title: "Хотите проверить, зарегистрировано ли лекарство официально?",
+    druginfo_registry_desc: "Ищите в официальном государственном реестре лекарственных средств Республики Узбекистан.",
+    druginfo_registry_link: "Открыть официальный реестр ↗",
+    locked_sample_clinic: "Пример клиники",
+    locked_sample_address: "Здесь виден адрес",
+    locked_go_premium: "Перейти на премиум",
+  },
+  en: {
+    auth_subtitle: "Sign in to continue",
+    auth_google: "Continue with Google",
+    auth_or_email: "or with email",
+    auth_signup: "Sign up",
+    auth_signin: "Sign in (already have an account)",
+    auth_password_ph: "Password (min 6 characters)",
+    nav_dashboard: "Dashboard",
+    nav_meds: "Medications",
+    nav_calories: "Calories",
+    nav_steps: "Steps",
+    nav_clinics: "Clinics",
+    premium_badge: "Premium",
+    nav_druginfo: "Drug Info",
+    nav_premium: "Subscription",
+    dash_today_title: "Today's overview",
+    dash_today_desc: "Your daily stats are gathered here",
+    lab_steps: "Steps",
+    lab_kcal: "Calories",
+    lab_meds_taken: "Meds taken",
+    dash_meds_title: "Today's medications",
+    dash_meds_desc: "Don't forget to take them on time",
+    qc_meds_title: "Add medication",
+    qc_meds_desc: "Quickly set up a reminder",
+    qc_go: "Go →",
+    qc_food_title: "Log food",
+    qc_food_desc: "Track your calories",
+    qc_steps_title: "Log steps",
+    qc_steps_desc: "Steps you've walked today",
+    notif_title: "🔔 Turn on sound reminders",
+    notif_desc: "Allow sound and on-screen notifications for medication time",
+    notif_allow: "Allow",
+    meds_add_title: "Add new medication",
+    meds_name_label: "Medication name",
+    meds_name_ph: "e.g. Paracetamol",
+    meds_time_label: "Time to take",
+    meds_days_label: "Course length in days (optional)",
+    btn_add: "Add",
+    meds_my_title: "My medications",
+    meds_disclaimer: "This app is a reminder tool only. Consult your doctor before changing or stopping a dose.",
+    cal_add_title: "Log food",
+    cal_product_label: "Food item",
+    cal_qty_label: "Amount (grams or units)",
+    cal_goal_label: "Daily goal (kcal)",
+    cal_today_title: "Today's meals",
+    cal_total: "Total",
+    bmi_title: "Body Mass Index (BMI)",
+    bmi_desc: "Calculate your BMI from height and weight",
+    bmi_height_label: "Height (cm)",
+    bmi_weight_label: "Weight (kg)",
+    bmi_disclaimer: "BMI is a general guide, not a diagnosis. Consult a doctor for an accurate assessment.",
+    steps_add_title: "Log today's steps",
+    steps_add_desc: "Enter from your phone's step counter or estimate",
+    steps_count_label: "Number of steps",
+    btn_save: "Save",
+    steps_goal_label: "Daily goal",
+    steps_week_title: "Last 7 days",
+    prem_title: "Premium subscription",
+    prem_desc: "Clinic search and detailed drug information — for premium users.",
+    prem_trial_chip: "1 week",
+    prem_free: "Free",
+    prem_trial_desc: "Try all premium features",
+    prem_trial_btn: "Start free trial",
+    prem_recommended: "Recommended",
+    prem_per_month: "UZS / month",
+    prem_monthly_desc: "Monthly subscription, cancel anytime",
+    prem_choose: "Choose",
+    prem_yearly_chip: "Yearly",
+    prem_per_year: "UZS / year",
+    prem_yearly_desc: "Save almost 2 months",
+    prem_weekly_line: "Weekly plan: 20,000 UZS —",
+    prem_weekly_link: "choose this plan",
+    prem_disclaimer: "This is a demo prototype. Real payments (Payme/Click) require a backend server and a registered business. For now, buttons only activate premium on this device.",
+    clinics_locked_title: "Find clinics",
+    clinics_locked_desc: "Premium is required to find clinics matching your location and health issue, along with phone numbers.",
+    clinics_search_title: "Search for a clinic",
+    clinics_address_label: "Your location (city)",
+    clinics_address_ph: "e.g. Samarkand, Bukhara, Andijan...",
+    clinics_symptom_label: "Health issue",
+    clinics_symptom_ph: "e.g. chest pain, headache, blood pressure...",
+    btn_search: "Search",
+    clinics_disclaimer: "Demo: this section currently uses a sample database of {n} clinics (regional centers). Real location-based search would require a maps integration like Google Places.",
+    clinics_results_title: "Results",
+    clinics_empty: "Search results will appear here",
+    druginfo_locked_title: "Drug information",
+    druginfo_locked_desc: "Premium is required to see why, when, and for which conditions a medication is taken.",
+    druginfo_title: "Drug information",
+    druginfo_name_label: "Enter medication name",
+    druginfo_name_ph: "e.g. Paracetamol",
+    druginfo_disclaimer: "This information is general only and does not replace medical advice. Consult a doctor or pharmacist before taking any medication. Our database currently covers {n} of the most common medications.",
+    druginfo_registry_title: "Want to check if a drug is officially registered?",
+    druginfo_registry_desc: "Search the official State Register of Medicines of the Republic of Uzbekistan.",
+    druginfo_registry_link: "Open official registry ↗",
+    locked_sample_clinic: "Sample clinic",
+    locked_sample_address: "Address shown here",
+    locked_go_premium: "Go to Premium",
+  },
+};
+
+let currentLang = 'uz';
+function t(key){
+  const dict = I18N[currentLang] || I18N.uz;
+  return dict[key] || I18N.uz[key] || key;
+}
+function applyLang(lang){
+  currentLang = lang;
+  const dict = I18N[lang] || I18N.uz;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(dict[key]) el.textContent = dict[key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+    const key = el.getAttribute('data-i18n-placeholder');
+    if(dict[key]) el.setAttribute('placeholder', dict[key]);
+  });
+  document.documentElement.lang = lang;
+}
+function setLang(lang){
+  localStorage.setItem('sv_lang', lang);
+  const sel = document.getElementById('langSelect');
+  if(sel) sel.value = lang;
+  applyLang(lang);
+  try{
+    if(typeof CLINIC_DB !== 'undefined' && document.getElementById('panel-clinics').classList.contains('active')) renderClinicsPanel();
+    if(typeof DRUG_DB !== 'undefined' && document.getElementById('panel-druginfo').classList.contains('active')) renderDrugInfoPanel();
+  }catch(e){ /* panels not ready yet, safe to ignore */ }
+}
+(function initLang(){
+  const saved = localStorage.getItem('sv_lang') || 'uz';
+  const sel = document.getElementById('langSelect');
+  if(sel) sel.value = saved;
+  applyLang(saved);
+})();
+
+
 const todayKey = () => new Date().toISOString().slice(0,10);
 const fmtDate = (d) => d.toISOString().slice(0,10);
 
@@ -928,6 +1307,33 @@ function renderFoodLog(){
   document.getElementById('dashKcal').textContent = total;
 }
 
+/* ---------------- BMI Calculator ---------------- */
+function calcBmi(){
+  const h = parseFloat(document.getElementById('bmiHeight').value);
+  const w = parseFloat(document.getElementById('bmiWeight').value);
+  const resultEl = document.getElementById('bmiResult');
+  if(!h || !w || h<=0 || w<=0){
+    resultEl.innerHTML = '';
+    return;
+  }
+  const heightM = h/100;
+  const bmi = w / (heightM*heightM);
+  let category, color;
+  if(bmi < 18.5){ category = 'Vazn yetishmovchiligi'; color = 'var(--sage)'; }
+  else if(bmi < 25){ category = 'Normal vazn'; color = '#286A4A'; }
+  else if(bmi < 30){ category = 'Ortiqcha vazn'; color = 'var(--gold)'; }
+  else { category = 'Semizlik'; color = 'var(--danger)'; }
+  resultEl.innerHTML = `
+    <div style="margin-top:14px; padding:14px; border-radius:10px; background:var(--surface-2); display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <div style="font-size:12px; color:var(--ink-soft); font-weight:600;">Sizning BMI'ngiz</div>
+        <div style="font-family:'Fraunces',serif; font-size:26px; font-weight:600;">${bmi.toFixed(1)}</div>
+      </div>
+      <div class="chip" style="background:${color}; color:white;">${category}</div>
+    </div>
+  `;
+}
+
 /* ---------------- STEPS ---------------- */
 async function saveSteps(){
   const val = parseInt(document.getElementById('stepsInput').value) || 0;
@@ -1035,27 +1441,27 @@ function findClinics(addressText, symptomText){
 function renderClinicsPanel(){
   const gate = document.getElementById('clinicsGate');
   if(!isPremium()){
-    gate.innerHTML = lockedTemplate('Klinikalarni topish', 'Manzilingiz va sog\u2019liq muammoingizga mos klinikalarni va telefon raqamlarini ko\u2019rish uchun premium kerak.');
+    gate.innerHTML = lockedTemplate(t('clinics_locked_title'), t('clinics_locked_desc'));
     return;
   }
   gate.innerHTML = `
     <div class="grid cols-2" style="align-items:start;">
       <div class="card">
-        <h3>Klinika qidirish</h3>
+        <h3>${t('clinics_search_title')}</h3>
         <div class="field">
-          <label>Manzilingiz (shahar)</label>
-          <input id="clinicAddress" placeholder="masalan: Samarqand, Buxoro, Andijon...">
+          <label>${t('clinics_address_label')}</label>
+          <input id="clinicAddress" placeholder="${t('clinics_address_ph')}">
         </div>
         <div class="field">
-          <label>Sog'liq muammosi</label>
-          <textarea id="clinicSymptom" rows="3" placeholder="masalan: yurak og'rig'i, bosh og'rig'i, bosim..."></textarea>
+          <label>${t('clinics_symptom_label')}</label>
+          <textarea id="clinicSymptom" rows="3" placeholder="${t('clinics_symptom_ph')}"></textarea>
         </div>
-        <button class="btn" onclick="searchClinics()">Qidirish</button>
-        <div class="disclaimer">Namuna: hozircha bu bo'lim ${CLINIC_DB.length} ta klinikadan iborat sinov maʼlumotlar bazasidan foydalanadi (asosiy viloyat markazlari). Haqiqiy joylashuv asosida qidirish uchun Google Places kabi xarita API integratsiyasi kerak bo'ladi.</div>
+        <button class="btn" onclick="searchClinics()">${t('btn_search')}</button>
+        <div class="disclaimer">${t('clinics_disclaimer').replace('{n}', CLINIC_DB.length)}</div>
       </div>
       <div class="card">
-        <h3>Natijalar</h3>
-        <div id="clinicResults"><div class="empty">Qidiruv natijalari shu yerda chiqadi</div></div>
+        <h3>${t('clinics_results_title')}</h3>
+        <div id="clinicResults"><div class="empty">${t('clinics_empty')}</div></div>
       </div>
     </div>
   `;
@@ -1140,19 +1546,24 @@ const DRUG_ALIASES = {
 function renderDrugInfoPanel(){
   const gate = document.getElementById('druginfoGate');
   if(!isPremium()){
-    gate.innerHTML = lockedTemplate('Dori maʼlumoti', 'Dori nomi va uning nima uchun, qachon, qanday kasalliklar uchun ichilishini bilish uchun premium kerak.');
+    gate.innerHTML = lockedTemplate(t('druginfo_locked_title'), t('druginfo_locked_desc'));
     return;
   }
   gate.innerHTML = `
     <div class="card">
-      <h3>Dori haqida maʼlumot</h3>
+      <h3>${t('druginfo_title')}</h3>
       <div class="field">
-        <label>Dori nomini kiriting</label>
-        <input id="drugQuery" placeholder="masalan: Paratsetamol">
+        <label>${t('druginfo_name_label')}</label>
+        <input id="drugQuery" placeholder="${t('druginfo_name_ph')}">
       </div>
-      <button class="btn" onclick="searchDrug()">Qidirish</button>
+      <button class="btn" onclick="searchDrug()">${t('btn_search')}</button>
       <div class="search-results" id="drugResults"></div>
-      <div class="disclaimer">Bu maʼlumot faqat umumiy maʼlumot uchun va tibbiy maslahat oʻrnini bosmaydi. Dori qabul qilishdan oldin shifokor yoki farmatsevt bilan maslahatlashing.</div>
+      <div class="disclaimer">${t('druginfo_disclaimer').replace('{n}', Object.keys(DRUG_DB).length)}</div>
+      <div class="card" style="background:var(--surface-2); margin-top:14px; box-shadow:none;">
+        <h3 style="font-size:14px;">${t('druginfo_registry_title')}</h3>
+        <p class="muted">${t('druginfo_registry_desc')}</p>
+        <a href="https://www.uzpharm-control.uz/uz/pages/state-register-of-medicines-and-medical-products" target="_blank" rel="noopener" class="btn ghost" style="display:inline-block; text-decoration:none; margin-top:6px;">${t('druginfo_registry_link')}</a>
+      </div>
     </div>
   `;
 }
@@ -1183,13 +1594,13 @@ function lockedTemplate(title, desc){
     <div class="locked-panel">
       <div class="locked-blur card">
         <h3>${title}</h3>
-        <div class="clinic-card"><div><div class="clinic-name">Namuna klinika</div><div class="meta">Manzil ko'rinadi</div></div></div>
+        <div class="clinic-card"><div><div class="clinic-name">${t('locked_sample_clinic')}</div><div class="meta">${t('locked_sample_address')}</div></div></div>
       </div>
       <div class="lock-overlay">
         <div class="lock-badge">🔒</div>
         <h3 style="margin:0;">${title} — Premium</h3>
         <p class="muted" style="max-width:320px;">${desc}</p>
-        <button class="btn gold" onclick="goTab('premium')">Premiumga o'tish</button>
+        <button class="btn gold" onclick="goTab('premium')">${t('locked_go_premium')}</button>
       </div>
     </div>
   `;
