@@ -90,7 +90,6 @@
     font-weight:600;
     border:1px solid var(--line);
   }
-  .plan-pill.premium{
     background:var(--gold-soft);
     color:#7A5A22;
     border-color:#E2CB9A;
@@ -267,7 +266,6 @@
     font-size:13px;
   }
 
-  /* premium lock overlay */
   .locked-panel{
     position:relative;
     border-radius:var(--radius);
@@ -304,23 +302,6 @@
     min-height:3px;
   }
   .bar-day{font-size:10px; color:var(--ink-soft);}
-
-  /* Premium plans */
-  .plans{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:16px;}
-  @media(max-width:780px){.plans{grid-template-columns:1fr;}}
-  .plan-card{
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:18px;
-    background:var(--surface);
-    display:flex; flex-direction:column; gap:10px;
-  }
-  .plan-card.featured{
-    border:2px solid var(--gold);
-    background:linear-gradient(180deg,var(--gold-soft) 0%, var(--surface) 55%);
-  }
-  .plan-price{font-family:'Fraunces',serif; font-size:26px; font-weight:600;}
-  .plan-price span{font-size:13px; font-weight:500; color:var(--ink-soft); font-family:'IBM Plex Sans',sans-serif;}
 
   .disclaimer{
     font-size:12px;
@@ -429,10 +410,10 @@
     <button class="tab active" data-tab="dashboard"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/></svg><span data-i18n="nav_dashboard">Bosh sahifa</span></button>
     <button class="tab" data-tab="meds"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="18" height="7" rx="3.5" transform="rotate(-45 12 12)"/><line x1="12" y1="7.5" x2="12" y2="16.5" transform="rotate(-45 12 12)"/></svg><span data-i18n="nav_meds">Dorilar</span></button>
     <button class="tab" data-tab="calories"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1 3-2 4-2 7a4 4 0 0 0 8 0c0-1.5-1-2.5-1-2.5s1 4-2 4c-2 0-1.5-2.5-1.5-4C13.5 4 12 2 12 2z"/><path d="M6 14a6 6 0 1 0 12 0c0-2-1-3-1-3s.5 5-3 5-3-3-3-3-1 1-1 1"/></svg><span data-i18n="nav_calories">Kaloriya</span></button>
+    <button class="tab" data-tab="family"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3 2.4-5 6-5s6 2 6 5"/><path d="M15 15c3 0 5 1.7 5 5"/></svg><span>Oila rejimi</span></button>
     <button class="tab" data-tab="steps"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4a2 2 0 1 1 3 1.7C10.5 6.5 10 7.5 10 9c0 2 1.5 2 1.5 4 0 1.5-1 2-2 2a2 2 0 1 1 0-4"/><path d="M16 12a2 2 0 1 1 3 1.7c-.5.8-1 1.8-1 3.3 0 2 1.5 2 1.5 4 0 1.5-1 2-2 2a2 2 0 1 1 0-4"/></svg><span data-i18n="nav_steps">Qadamlar</span></button>
-    <button class="tab" data-tab="clinics"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.5-7-11.5A7 7 0 0 1 19 9.5C19 14.5 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span data-i18n="nav_clinics">Klinikalar</span> <span class="lock" data-i18n="premium_badge">Premium</span></button>
-    <button class="tab" data-tab="druginfo"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.5" r="0.5" fill="currentColor"/></svg><span data-i18n="nav_druginfo">Dori maʼlumoti</span> <span class="lock" data-i18n="premium_badge">Premium</span></button>
-    <button class="tab" data-tab="premium"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.9 6.3L21 9.3l-4.5 4.5L17.6 21 12 17.8 6.4 21l1.1-7.2L3 9.3l6.1-1L12 2z"/></svg><span data-i18n="nav_premium">Obuna</span></button>
+    <button class="tab" data-tab="clinics"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.5-7-11.5A7 7 0 0 1 19 9.5C19 14.5 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span data-i18n="nav_clinics">Klinikalar</span></button>
+    <button class="tab" data-tab="druginfo"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.5" r="0.5" fill="currentColor"/></svg><span data-i18n="nav_druginfo">Dori maʼlumoti</span></button>
   </nav>
 
   <main>
@@ -537,6 +518,10 @@
             <input id="foodQty" type="number" value="100">
           </div>
           <button class="btn" onclick="addFood()" data-i18n="btn_add">Qoʻshish</button>
+          <div class="field" style="margin-top:16px;"><label>Matn orqali AI kaloriya</label><div class="row"><input id="foodAiText" placeholder="masalan: 2 dona tuxum va non"><button class="btn ghost" onclick="parseFoodWithAI()">Hisoblash</button></div></div>
+          <div class="field"><label>Rasm orqali AI kaloriya</label><input id="foodPhoto" type="file" accept="image/*" onchange="analyzeFoodPhoto(event)"></div>
+          <div class="row"><button class="btn ghost" onclick="startVoiceInput()">Ovozli kiritish</button><span id="voiceStatus" class="muted" style="align-self:center;"></span></div>
+
           <div class="field" style="margin-top:16px;">
             <label data-i18n="cal_goal_label">Kunlik maqsad (kkal)</label>
             <input id="calGoal" type="number" value="2000" onchange="saveGoal()">
@@ -593,47 +578,31 @@
       </div>
     </section>
 
-    <!-- CLINICS (premium) -->
+
+    <!-- FAMILY MODE -->
+    <section class="panel" id="panel-family">
+      <div class="grid cols-2" style="align-items:start;">
+        <div class="card">
+          <h3>Oila rejimi</h3>
+          <p class="muted">Oila aʼzolaringizni qoʻshing va ularning sogʻliq odatlarini bir joyda kuzating.</p>
+          <div class="field"><label>Ism</label><input id="familyName" placeholder="masalan: Onam"></div>
+          <div class="field"><label>Qarindoshlik</label><input id="familyRelation" placeholder="masalan: ona"></div>
+          <button class="btn" onclick="addFamilyMember()">Aʼzo qoʻshish</button>
+        </div>
+        <div class="card"><h3>Oila aʼzolari</h3><div id="familyList"><div class="empty">Hali aʼzo qoʻshilmagan</div></div></div>
+      </div>
+    </section>
+
+    <!-- CLINICS -->
     <section class="panel" id="panel-clinics">
       <div id="clinicsGate"></div>
     </section>
 
-    <!-- DRUG INFO (premium) -->
+    <!-- DRUG INFO -->
     <section class="panel" id="panel-druginfo">
       <div id="druginfoGate"></div>
     </section>
-
-    <!-- PREMIUM -->
-    <section class="panel" id="panel-premium">
-      <div class="card">
-        <h3 data-i18n="prem_title">Premium obuna</h3>
-        <p class="muted" data-i18n="prem_desc">Klinikalarni topish va dori haqida batafsil maʼlumot — premium foydalanuvchilar uchun.</p>
-        <div class="plans">
-          <div class="plan-card">
-            <span class="chip" data-i18n="prem_trial_chip">1 hafta</span>
-            <div class="plan-price" data-i18n="prem_free">Bepul</div>
-            <p class="muted" style="flex:1;" data-i18n="prem_trial_desc">Barcha premium funksiyalarni sinab ko'ring</p>
-            <button class="btn ghost" onclick="activatePlan('trial')" data-i18n="prem_trial_btn">Sinovni boshlash</button>
-          </div>
-          <div class="plan-card featured">
-            <span class="chip done" data-i18n="prem_recommended">Tavsiya etiladi</span>
-            <div class="plan-price">70,000 <span data-i18n="prem_per_month">so'm / oy</span></div>
-            <p class="muted" style="flex:1;" data-i18n="prem_monthly_desc">Oylik obuna, istalgan vaqt bekor qilish mumkin</p>
-            <button class="btn gold" onclick="activatePlan('monthly')" data-i18n="prem_choose">Tanlash</button>
-          </div>
-          <div class="plan-card">
-            <span class="chip" data-i18n="prem_yearly_chip">Yillik</span>
-            <div class="plan-price">300,000 <span data-i18n="prem_per_year">so'm / yil</span></div>
-            <p class="muted" style="flex:1;" data-i18n="prem_yearly_desc">2 oyga yaqin tejash bilan</p>
-            <button class="btn ghost" onclick="activatePlan('yearly')" data-i18n="prem_choose">Tanlash</button>
-          </div>
-        </div>
-        <p class="muted" style="margin-top:10px;"><span data-i18n="prem_weekly_line">Haftalik reja: 20,000 so'm —</span> <a href="#" onclick="activatePlan('weekly'); return false;" style="color:var(--teal-deep); font-weight:600;" data-i18n="prem_weekly_link">shu tarifni tanlash</a></p>
-        <div class="disclaimer" data-i18n="prem_disclaimer">Bu — demo prototip. Haqiqiy toʻlov (Payme/Click) ulanishi uchun backend server va yuridik shaxs (IP/MChJ) kerak bo'ladi. Hozircha tugmalar premium holatini faqat shu qurilmada faollashtiradi.</div>
-        <div id="subStatus" style="margin-top:14px;"></div>
-      </div>
-    </section>
-  </main>
+</main>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -641,13 +610,13 @@
 <script>
 /* ---------------- Firebase ---------------- */
 const firebaseConfig = {
-  apiKey: "AIzaSyBpA8xbmZRM_Du2TArMxwN798Q70955lAY",
-  authDomain: "sogligim-113ae.firebaseapp.com",
-  projectId: "sogligim-113ae",
-  storageBucket: "sogligim-113ae.firebasestorage.app",
-  messagingSenderId: "939640657660",
-  appId: "1:939640657660:web:23fce8a66fe5f29ac7a979",
-  measurementId: "G-6HK7HP6EQ4"
+  apiKey: "AIzaSyBilCpT4QEHpcr7FZ_-542wxErC2tFEL3Q",
+  authDomain: "sogligim-prod-db270.firebaseapp.com",
+  projectId: "sogligim-prod-db270",
+  storageBucket: "sogligim-prod-db270.firebasestorage.app",
+  messagingSenderId: "1098824868523",
+  appId: "1:1098824868523:web:e1d24706723187a7bccdee",
+  measurementId: "G-9NGCRV3G6E"
 };
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
@@ -730,9 +699,7 @@ const I18N = {
     nav_calories: "Kaloriya",
     nav_steps: "Qadamlar",
     nav_clinics: "Klinikalar",
-    premium_badge: "Premium",
     nav_druginfo: "Dori maʼlumoti",
-    nav_premium: "Obuna",
     dash_today_title: "Bugungi holat",
     dash_today_desc: "Kunlik ko'rsatkichlaringiz shu yerda jamlanadi",
     lab_steps: "Qadam",
@@ -775,24 +742,6 @@ const I18N = {
     btn_save: "Saqlash",
     steps_goal_label: "Kunlik maqsad",
     steps_week_title: "Oxirgi 7 kun",
-    prem_title: "Premium obuna",
-    prem_desc: "Klinikalarni topish va dori haqida batafsil maʼlumot — premium foydalanuvchilar uchun.",
-    prem_trial_chip: "1 hafta",
-    prem_free: "Bepul",
-    prem_trial_desc: "Barcha premium funksiyalarni sinab ko'ring",
-    prem_trial_btn: "Sinovni boshlash",
-    prem_recommended: "Tavsiya etiladi",
-    prem_per_month: "so'm / oy",
-    prem_monthly_desc: "Oylik obuna, istalgan vaqt bekor qilish mumkin",
-    prem_choose: "Tanlash",
-    prem_yearly_chip: "Yillik",
-    prem_per_year: "so'm / yil",
-    prem_yearly_desc: "2 oyga yaqin tejash bilan",
-    prem_weekly_line: "Haftalik reja: 20,000 so'm —",
-    prem_weekly_link: "shu tarifni tanlash",
-    prem_disclaimer: "Bu — demo prototip. Haqiqiy toʻlov (Payme/Click) ulanishi uchun backend server va yuridik shaxs (IP/MChJ) kerak bo'ladi. Hozircha tugmalar premium holatini faqat shu qurilmada faollashtiradi.",
-    clinics_locked_title: "Klinikalarni topish",
-    clinics_locked_desc: "Manzilingiz va sog'liq muammoingizga mos klinikalarni va telefon raqamlarini ko'rish uchun premium kerak.",
     clinics_search_title: "Klinika qidirish",
     clinics_address_label: "Manzilingiz (shahar)",
     clinics_address_ph: "masalan: Samarqand, Buxoro, Andijon...",
@@ -802,8 +751,6 @@ const I18N = {
     clinics_disclaimer: "Namuna: hozircha bu bo'lim {n} ta klinikadan iborat sinov maʼlumotlar bazasidan foydalanadi (asosiy viloyat markazlari). Haqiqiy joylashuv asosida qidirish uchun Google Places kabi xarita API integratsiyasi kerak bo'ladi.",
     clinics_results_title: "Natijalar",
     clinics_empty: "Qidiruv natijalari shu yerda chiqadi",
-    druginfo_locked_title: "Dori maʼlumoti",
-    druginfo_locked_desc: "Dori nomi va uning nima uchun, qachon, qanday kasalliklar uchun ichilishini bilish uchun premium kerak.",
     druginfo_title: "Dori haqida maʼlumot",
     druginfo_name_label: "Dori nomini kiriting",
     druginfo_name_ph: "masalan: Paratsetamol",
@@ -811,9 +758,6 @@ const I18N = {
     druginfo_registry_title: "Dori rasman roʻyxatdan oʻtganini tekshirmoqchimisiz?",
     druginfo_registry_desc: "Oʻzbekiston Respublikasining rasmiy Dori vositalari davlat reestrida qidiring.",
     druginfo_registry_link: "Rasmiy reestrni ochish ↗",
-    locked_sample_clinic: "Namuna klinika",
-    locked_sample_address: "Manzil ko'rinadi",
-    locked_go_premium: "Premiumga o'tish",
   },
   ru: {
     auth_subtitle: "Войдите, чтобы продолжить",
@@ -827,9 +771,7 @@ const I18N = {
     nav_calories: "Калории",
     nav_steps: "Шаги",
     nav_clinics: "Клиники",
-    premium_badge: "Premium",
     nav_druginfo: "О лекарствах",
-    nav_premium: "Подписка",
     dash_today_title: "Сегодняшнее состояние",
     dash_today_desc: "Ваши ежедневные показатели собраны здесь",
     lab_steps: "Шаги",
@@ -872,24 +814,6 @@ const I18N = {
     btn_save: "Сохранить",
     steps_goal_label: "Дневная цель",
     steps_week_title: "Последние 7 дней",
-    prem_title: "Премиум подписка",
-    prem_desc: "Поиск клиник и подробная информация о лекарствах — для премиум пользователей.",
-    prem_trial_chip: "1 неделя",
-    prem_free: "Бесплатно",
-    prem_trial_desc: "Попробуйте все премиум функции",
-    prem_trial_btn: "Начать пробный период",
-    prem_recommended: "Рекомендуем",
-    prem_per_month: "сум / мес",
-    prem_monthly_desc: "Ежемесячная подписка, отмена в любое время",
-    prem_choose: "Выбрать",
-    prem_yearly_chip: "Годовой",
-    prem_per_year: "сум / год",
-    prem_yearly_desc: "Экономия почти 2 месяца",
-    prem_weekly_line: "Недельный план: 20 000 сум —",
-    prem_weekly_link: "выбрать этот план",
-    prem_disclaimer: "Это демо-прототип. Для реальной оплаты (Payme/Click) нужен backend-сервер и юрлицо (ИП/ООО). Пока кнопки активируют премиум только на этом устройстве.",
-    clinics_locked_title: "Поиск клиник",
-    clinics_locked_desc: "Для поиска клиник по адресу и симптомам, а также телефонов — нужна премиум подписка.",
     clinics_search_title: "Поиск клиники",
     clinics_address_label: "Ваш адрес (город)",
     clinics_address_ph: "например: Самарканд, Бухара, Андижан...",
@@ -899,8 +823,6 @@ const I18N = {
     clinics_disclaimer: "Демо: сейчас этот раздел использует тестовую базу из {n} клиник (областные центры). Для поиска по реальному местоположению нужна интеграция карт, например Google Places.",
     clinics_results_title: "Результаты",
     clinics_empty: "Результаты поиска появятся здесь",
-    druginfo_locked_title: "Информация о лекарствах",
-    druginfo_locked_desc: "Для информации о том, зачем, когда и при каких болезнях принимать лекарство — нужна премиум подписка.",
     druginfo_title: "Информация о лекарстве",
     druginfo_name_label: "Введите название лекарства",
     druginfo_name_ph: "например: Парацетамол",
@@ -908,9 +830,6 @@ const I18N = {
     druginfo_registry_title: "Хотите проверить, зарегистрировано ли лекарство официально?",
     druginfo_registry_desc: "Ищите в официальном государственном реестре лекарственных средств Республики Узбекистан.",
     druginfo_registry_link: "Открыть официальный реестр ↗",
-    locked_sample_clinic: "Пример клиники",
-    locked_sample_address: "Здесь виден адрес",
-    locked_go_premium: "Перейти на премиум",
   },
   en: {
     auth_subtitle: "Sign in to continue",
@@ -924,9 +843,7 @@ const I18N = {
     nav_calories: "Calories",
     nav_steps: "Steps",
     nav_clinics: "Clinics",
-    premium_badge: "Premium",
     nav_druginfo: "Drug Info",
-    nav_premium: "Subscription",
     dash_today_title: "Today's overview",
     dash_today_desc: "Your daily stats are gathered here",
     lab_steps: "Steps",
@@ -969,24 +886,6 @@ const I18N = {
     btn_save: "Save",
     steps_goal_label: "Daily goal",
     steps_week_title: "Last 7 days",
-    prem_title: "Premium subscription",
-    prem_desc: "Clinic search and detailed drug information — for premium users.",
-    prem_trial_chip: "1 week",
-    prem_free: "Free",
-    prem_trial_desc: "Try all premium features",
-    prem_trial_btn: "Start free trial",
-    prem_recommended: "Recommended",
-    prem_per_month: "UZS / month",
-    prem_monthly_desc: "Monthly subscription, cancel anytime",
-    prem_choose: "Choose",
-    prem_yearly_chip: "Yearly",
-    prem_per_year: "UZS / year",
-    prem_yearly_desc: "Save almost 2 months",
-    prem_weekly_line: "Weekly plan: 20,000 UZS —",
-    prem_weekly_link: "choose this plan",
-    prem_disclaimer: "This is a demo prototype. Real payments (Payme/Click) require a backend server and a registered business. For now, buttons only activate premium on this device.",
-    clinics_locked_title: "Find clinics",
-    clinics_locked_desc: "Premium is required to find clinics matching your location and health issue, along with phone numbers.",
     clinics_search_title: "Search for a clinic",
     clinics_address_label: "Your location (city)",
     clinics_address_ph: "e.g. Samarkand, Bukhara, Andijan...",
@@ -996,8 +895,6 @@ const I18N = {
     clinics_disclaimer: "Demo: this section currently uses a sample database of {n} clinics (regional centers). Real location-based search would require a maps integration like Google Places.",
     clinics_results_title: "Results",
     clinics_empty: "Search results will appear here",
-    druginfo_locked_title: "Drug information",
-    druginfo_locked_desc: "Premium is required to see why, when, and for which conditions a medication is taken.",
     druginfo_title: "Drug information",
     druginfo_name_label: "Enter medication name",
     druginfo_name_ph: "e.g. Paracetamol",
@@ -1005,9 +902,6 @@ const I18N = {
     druginfo_registry_title: "Want to check if a drug is officially registered?",
     druginfo_registry_desc: "Search the official State Register of Medicines of the Republic of Uzbekistan.",
     druginfo_registry_link: "Open official registry ↗",
-    locked_sample_clinic: "Sample clinic",
-    locked_sample_address: "Address shown here",
-    locked_go_premium: "Go to Premium",
   },
 };
 
@@ -1057,70 +951,47 @@ function showToast(msg){
   setTimeout(()=>t.classList.remove('show'), 2200);
 }
 
+function collectionForKey(key){
+  if(key === 'medications') return ['medicines','current'];
+  if(key.startsWith('calories:')) return ['food_logs', key.slice(9)];
+  if(key.startsWith('steps:')) return ['steps_logs', key.slice(6)];
+  if(key.startsWith('family:')) return ['family_members', key.slice(7)];
+  return null;
+}
 async function storageGet(key, shared=false){
-  return key in userDataCache ? userDataCache[key] : null;
+  if(!currentUser) return null;
+  const route = collectionForKey(key);
+  try{
+    if(route){ const snap = await db.collection(route[0]).doc(route[1]).get(); return snap.exists ? (snap.data().value ?? snap.data()) : null; }
+    if(key in userDataCache) return userDataCache[key];
+    const snap = await db.collection('users').doc(currentUser.uid).get();
+    userDataCache = snap.exists ? snap.data() : {};
+    return userDataCache[key] ?? null;
+  }catch(e){ console.error('Firestore read failed', e); return null; }
 }
 async function storageSet(key, value, shared=false){
   userDataCache[key] = value;
   if(!currentUser) return;
-  try{ await db.collection('users').doc(currentUser.uid).set({ [key]: value }, { merge:true }); }
-  catch(e){ console.error('Firestore save failed', e); showToast('Saqlashda xatolik, internetni tekshiring'); }
+  try{
+    const route = collectionForKey(key);
+    if(route) await db.collection(route[0]).doc(route[1]).set({value, uid: currentUser.uid, updatedAt: firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+    else await db.collection('users').doc(currentUser.uid).set({ [key]: value, uid: currentUser.uid, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge:true });
+  }catch(e){ console.error('Firestore save failed', e); showToast('Saqlashda xatolik, internetni tekshiring'); }
 }
 
-
-
 /* ---------------- Tabs ---------------- */
-const PREMIUM_TABS = ['clinics','druginfo'];
 function goTab(name){
   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
   document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active', p.id==='panel-'+name));
   if(name==='clinics') renderClinicsPanel();
   if(name==='druginfo') renderDrugInfoPanel();
+  if(name==='family') loadFamilyMembers();
 }
-document.getElementById('tabs').addEventListener('click', (e)=>{
-  const btn = e.target.closest('.tab');
-  if(!btn) return;
-  goTab(btn.dataset.tab);
-});
+document.getElementById('tabs').addEventListener('click', (e)=>{ const btn=e.target.closest('.tab'); if(btn) goTab(btn.dataset.tab); });
 
-/* ---------------- Subscription state ---------------- */
-let sub = { status:'free', plan:null, activatedAt:null };
-
-async function loadSub(){
-  const s = await storageGet('subscription');
-  if(s) sub = s;
-  updatePlanPill();
-}
-async function activatePlan(plan){
-  sub = { status: plan==='trial' ? 'trial' : 'premium', plan, activatedAt: new Date().toISOString() };
-  await storageSet('subscription', sub);
-  updatePlanPill();
-  showToast(plan==='trial' ? '7 kunlik bepul sinov faollashtirildi' : 'Premium faollashtirildi (demo)');
-  renderClinicsPanel();
-  renderDrugInfoPanel();
-  renderSubStatus();
-}
-function isPremium(){ return sub.status==='trial' || sub.status==='premium'; }
-function updatePlanPill(){
-  const pill = document.getElementById('planPill');
-  if(isPremium()){
-    pill.textContent = sub.status==='trial' ? 'Sinov rejimi' : 'Premium';
-    pill.classList.add('premium');
-  } else {
-    pill.textContent = 'Bepul reja';
-    pill.classList.remove('premium');
-  }
-  renderSubStatus();
-}
-function renderSubStatus(){
-  const el = document.getElementById('subStatus');
-  if(!el) return;
-  if(isPremium()){
-    el.innerHTML = `<div class="chip done">Faol: ${sub.plan==='trial'?'7 kunlik sinov':sub.plan==='weekly'?'Haftalik':sub.plan==='monthly'?'Oylik':'Yillik'} reja</div>`;
-  } else {
-    el.innerHTML = `<div class="chip">Hozircha bepul rejadasiz</div>`;
-  }
-}
+let sub = {status:'free'};
+function renderSubStatus(){}
+async function loadSub(){ updatePlanPill(); }
 
 /* ---------------- MEDICATIONS ---------------- */
 let meds = [];
@@ -1378,7 +1249,6 @@ async function renderStepsBars(){
     </div>`).join('');
 }
 
-/* ---------------- CLINICS (premium, mock data) ---------------- */
 const CLINIC_DB = [
   // Toshkent
   { name:'Toshkent Tez Tibbiy Yordam Markazi', city:'toshkent', specialties:['umumiy','yurak','shoshilinch'], phone:'+998 71 233 40 20', address:'Toshkent sh., Chilonzor tumani' },
@@ -1440,10 +1310,6 @@ function findClinics(addressText, symptomText){
 }
 function renderClinicsPanel(){
   const gate = document.getElementById('clinicsGate');
-  if(!isPremium()){
-    gate.innerHTML = lockedTemplate(t('clinics_locked_title'), t('clinics_locked_desc'));
-    return;
-  }
   gate.innerHTML = `
     <div class="grid cols-2" style="align-items:start;">
       <div class="card">
@@ -1482,7 +1348,6 @@ function searchClinics(){
 }
 
 
-/* ---------------- DRUG INFO (premium, mock data) ---------------- */
 const DRUG_DB = {
   'paratsetamol': { usage:'Bosh ogʻrigʻi, tana harorati koʻtarilishi, yengil-oʻrtacha ogʻriqlar uchun.', when:'Ovqatdan keyin, kuniga 3-4 marta (shifokor koʻrsatmasiga qarab).', conditions:'Shamollash, gripp, bosh ogʻrigʻi, isitma.' },
   'ibuprofen': { usage:'Yalligʻlanishga qarshi, ogʻriq qoldiruvchi va isitma tushiruvchi.', when:'Ovqatdan keyin, kuniga 2-3 marta.', conditions:'Bosh ogʻrigʻi, mushak ogʻrigʻi, isitma, yalligʻlanish.' },
@@ -1545,10 +1410,6 @@ const DRUG_ALIASES = {
 };
 function renderDrugInfoPanel(){
   const gate = document.getElementById('druginfoGate');
-  if(!isPremium()){
-    gate.innerHTML = lockedTemplate(t('druginfo_locked_title'), t('druginfo_locked_desc'));
-    return;
-  }
   gate.innerHTML = `
     <div class="card">
       <h3>${t('druginfo_title')}</h3>
@@ -1589,28 +1450,35 @@ function searchDrug(){
   `;
 }
 
-function lockedTemplate(title, desc){
-  return `
-    <div class="locked-panel">
-      <div class="locked-blur card">
-        <h3>${title}</h3>
-        <div class="clinic-card"><div><div class="clinic-name">${t('locked_sample_clinic')}</div><div class="meta">${t('locked_sample_address')}</div></div></div>
-      </div>
-      <div class="lock-overlay">
-        <div class="lock-badge">🔒</div>
-        <h3 style="margin:0;">${title} — Premium</h3>
-        <p class="muted" style="max-width:320px;">${desc}</p>
-        <button class="btn gold" onclick="goTab('premium')">${t('locked_go_premium')}</button>
-      </div>
-    </div>
-  `;
-}
 
 /* ---------------- Init ---------------- */
+let familyMembers = [];
+async function loadFamilyMembers(){
+  const snap = currentUser ? await db.collection('family_members').where('uid','==',currentUser.uid).get() : {docs:[]};
+  familyMembers = snap.docs.map(d=>({id:d.id,...d.data()}));
+  const el=document.getElementById('familyList'); if(!el) return;
+  el.innerHTML = familyMembers.length ? familyMembers.map(m=>`<div class="list-item"><div><b>${escapeHtml(m.name)}</b><div class="meta">${escapeHtml(m.relation||'')}</div></div><button class="btn danger-ghost" onclick="removeFamilyMember('${m.id}')">Oʻchirish</button></div>`).join('') : '<div class="empty">Hali aʼzo qoʻshilmagan</div>';
+}
+async function addFamilyMember(){
+  const name=document.getElementById('familyName').value.trim(), relation=document.getElementById('familyRelation').value.trim();
+  if(!name || !currentUser) return showToast('Ismni kiriting');
+  await db.collection('family_members').add({uid:currentUser.uid,name,relation,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+  document.getElementById('familyName').value=''; document.getElementById('familyRelation').value=''; await loadFamilyMembers(); showToast('Oila aʼzosi qoʻshildi');
+}
+async function removeFamilyMember(id){ await db.collection('family_members').doc(id).delete(); await loadFamilyMembers(); }
+async function parseFoodWithAI(){
+  const text=document.getElementById('foodAiText').value.trim(); if(!text) return showToast('Ovqat tavsifini kiriting');
+  showToast('AI hisoblamoqda…');
+  try{ const r=await fetch('https://us-central1-sogligim-prod-db270.cloudfunctions.net/parseFood',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})}); const d=await r.json(); if(d.name){ const opt=[...document.getElementById('foodSelect').options].find(o=>o.textContent.toLowerCase().includes(d.name.toLowerCase())); if(opt) document.getElementById('foodSelect').value=opt.value; document.getElementById('foodQty').value=d.quantity||1; showToast(`${d.name}: ${d.calories} kkal`); } else showToast('AI javobini olishda xatolik'); }catch(e){ showToast('AI xizmati vaqtincha mavjud emas'); }
+}
+async function analyzeFoodPhoto(event){ const file=event.target.files?.[0]; if(!file) return; showToast('Rasm tahlil qilinmoqda…'); const reader=new FileReader(); reader.onload=async()=>{ try{ const r=await fetch('https://us-central1-sogligim-prod-db270.cloudfunctions.net/analyzeFoodPhoto',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:reader.result})}); const d=await r.json(); if(d.calories) showToast(`${d.name||'Ovqat'}: ${d.calories} kkal`); else showToast('Rasmni tahlil qilib bo‘lmadi'); }catch(e){ showToast('AI xizmati vaqtincha mavjud emas'); } }; reader.readAsDataURL(file); }
+function startVoiceInput(){ const SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR) return showToast('Brauzer ovozli kiritishni qoʻllab-quvvatlamaydi'); const r=new SR(); r.lang='uz-UZ'; r.onstart=()=>document.getElementById('voiceStatus').textContent='Tinglanmoqda…'; r.onresult=e=>{ document.getElementById('foodAiText').value=e.results[0][0].transcript; document.getElementById('voiceStatus').textContent='Tayyor'; }; r.onerror=()=>document.getElementById('voiceStatus').textContent='Xatolik'; r.start(); }
+
 async function init(){
   initFoodSelect();
   updateNotifBanner();
   await loadSub();
+  await loadFamilyMembers();
   await loadMeds();
   await loadFoodLog();
   await renderStepsDashboard();
